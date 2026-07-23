@@ -126,7 +126,7 @@ export default function AdminDashboardScreen() {
           </View>
         </View>
 
-        <View className="gap-3">
+        {/* <View className="gap-3">
           <Text className="text-base font-semibold text-slate-900 dark:text-white">
             System & Help
           </Text>
@@ -151,7 +151,7 @@ export default function AdminDashboardScreen() {
               <Text className="text-xs font-bold text-white">Replay</Text>
             </Pressable>
           </Card>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );

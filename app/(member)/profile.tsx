@@ -83,7 +83,7 @@ export default function ProfileScreen() {
           </View>
         </Card>
 
-        <Card className="gap-3">
+        {/* <Card className="gap-3">
           <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
             App Help & Onboarding
           </Text>
@@ -93,7 +93,7 @@ export default function ProfileScreen() {
             icon="sparkles-outline"
             onPress={handleReplayOnboarding}
           />
-        </Card>
+        </Card> */}
 
         <Button label="Sign out" icon="log-out-outline" variant="danger" onPress={signOut} />
       </ScrollView>

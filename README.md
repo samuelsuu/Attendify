@@ -1,50 +1,84 @@
-# Welcome to your Expo app 👋
+# Attendify
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A smart attendance management app built with Expo Router, NativeWind, Supabase, and React Query. Three roles — **Admin**, **Student**, **Lecturer** — each with their own experience behind Supabase-authenticated, role-gated routes.
 
-## Get started
+## Stack
 
-1. Install dependencies
+- Expo (SDK 54) + Expo Router + TypeScript
+- NativeWind (Tailwind CSS for React Native)
+- Supabase (Auth + Postgres + Row Level Security)
+- TanStack React Query
+- `expo-camera` (QR scanning) + `react-native-qrcode-svg` (QR generation)
 
-   ```bash
-   npm install
-   ```
+## One-time setup
 
-2. Start the app
+### 1. Run the database schema
 
-   ```bash
-   npx expo start
-   ```
+Open your Supabase project's **SQL Editor** and run the contents of [`supabase/schema.sql`](supabase/schema.sql). This creates the `profiles` and `attendance` tables, RLS policies, and a trigger that auto-creates a `profiles` row whenever a new auth user is created. It's safe to re-run any time you pull an update to this file — everything is `create or replace` / `drop ... if exists`.
 
-In the output, you'll find options to open the app in a
+### 2. Configure Supabase credentials
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Edit [`lib/config.ts`](lib/config.ts) (already scaffolded with placeholders, gitignored) and fill in your project's values from **Supabase Dashboard → Settings → API**:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```ts
+export const SUPABASE_URL = "https://your-project-ref.supabase.co";
+export const SUPABASE_ANON_KEY = "your-anon-key";
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+`lib/config.example.ts` is the committed template — copy it to `lib/config.ts` again if you ever need to reset it.
 
-## Learn more
+### 3. Create your first admin account
 
-To learn more about developing your project with Expo, look at the following resources:
+There is no self-signup. Bootstrap your **first** admin account via the Supabase Dashboard:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. Dashboard → **Authentication → Users → Add user**.
+2. Set an email + password.
+3. In **User Metadata**, add JSON like:
+   ```json
+   { "full_name": "Jane Doe", "role": "admin" }
+   ```
+   `role` must be `admin`, `student`, or `lecturer` (defaults to `student` if omitted).
+4. The `handle_new_user` trigger automatically creates the matching `profiles` row — nothing else to do.
 
-## Join the community
+From then on, that admin can create **student** and **lecturer** accounts directly in the app (Dashboard → "Add account", or the **+** button on the Students/Lecturers screens) — see step 4 below to enable it.
 
-Join our community of developers creating universal apps.
+### 4. Deploy the `create-user` Edge Function
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+In-app account creation needs a small server-side function so the app never has to hold your Supabase `service_role` key. Using the [Supabase CLI](https://supabase.com/docs/guides/cli):
+
+```bash
+npx supabase login
+npx supabase link --project-ref <your-project-ref>   # the subdomain in your project URL
+npx supabase functions deploy create-user
+```
+
+No extra secrets to set — `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` are automatically available inside every Edge Function. The function ([`supabase/functions/create-user/index.ts`](supabase/functions/create-user/index.ts)) verifies the caller is an admin (via their JWT + `profiles.role`) before creating anyone, and only allows creating `student`/`lecturer` accounts — not other admins.
+
+### 5. Install dependencies & run
+
+```bash
+npm install
+npx expo start
+```
+
+Scan the QR with Expo Go, or run on a simulator (`npx expo start --ios` / `--android`). The QR **scanner** screen (admin only) needs a real device or a simulator with camera support.
+
+## Project structure
+
+```
+app/              Expo Router screens (login, (member)/, (admin)/)
+components/       Reusable UI (Card, Button, QrCodeCard, list items, ...)
+hooks/            Auth context + React Query hooks
+services/         Supabase query functions
+lib/              Supabase client, date helpers, query client
+types/            Shared TypeScript types
+supabase/         schema.sql (run in SQL editor) + functions/create-user (deploy via CLI)
+```
+
+## Notes
+
+- Student and Lecturer share the same `(member)` route group. Lecturers additionally get **Scan** and **My Scans** tabs (hidden for students via `href: null`) — they can scan a student's QR to mark attendance, same as admin, and see everyone they've personally recorded. The admin and lecturer scan screens both render the shared [`components/attendance-scanner.tsx`](components/attendance-scanner.tsx).
+- Lecturers can only record attendance for `student` accounts — enforced both client-side (immediate feedback) and in the `attendance_insert` RLS policy (the real, unbypassable check). Admins remain unrestricted.
+- Attendance is unique per `(user_id, date)` at the database level, so "already recorded today" is enforced even under concurrent scans.
+- Dark mode follows the system appearance automatically via NativeWind.
+- Admin-created accounts get `email_confirm: true` from the Edge Function, so they can sign in immediately with the password the admin sets — no email confirmation step.

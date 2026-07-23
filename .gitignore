@@ -31,7 +31,11 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
+
+# Supabase config (contains real credentials — see lib/config.example.ts)
+lib/config.ts
 
 # typescript
 *.tsbuildinfo

@@ -9,12 +9,13 @@ A smart attendance management app built with Expo Router, NativeWind, Supabase, 
 - Supabase (Auth + Postgres + Row Level Security)
 - TanStack React Query
 - `expo-camera` (QR scanning) + `react-native-qrcode-svg` (QR generation)
+- `expo-image-picker` + `expo-file-system` (profile picture upload) + Supabase Storage
 
 ## One-time setup
 
 ### 1. Run the database schema
 
-Open your Supabase project's **SQL Editor** and run the contents of [`supabase/schema.sql`](supabase/schema.sql). This creates the `profiles` and `attendance` tables, RLS policies, and a trigger that auto-creates a `profiles` row whenever a new auth user is created. It's safe to re-run any time you pull an update to this file — everything is `create or replace` / `drop ... if exists`.
+Open your Supabase project's **SQL Editor** and run the contents of [`supabase/schema.sql`](supabase/schema.sql). This creates the `profiles` and `attendance` tables, RLS policies, a trigger that auto-creates a `profiles` row whenever a new auth user is created, and a public `avatars` Storage bucket (with admin-only write policies) for profile pictures. It's safe to re-run any time you pull an update to this file — everything is `create or replace` / `drop ... if exists`.
 
 ### 2. Configure Supabase credentials
 
@@ -82,3 +83,4 @@ supabase/         schema.sql (run in SQL editor) + functions/create-user (deploy
 - Attendance is unique per `(user_id, date)` at the database level, so "already recorded today" is enforced even under concurrent scans.
 - Dark mode follows the system appearance automatically via NativeWind.
 - Admin-created accounts get `email_confirm: true` from the Edge Function, so they can sign in immediately with the password the admin sets — no email confirmation step.
+- Profile pictures are admin-managed only: pick one while creating an account ([`app/(admin)/create-user.tsx`](app/(admin)/create-user.tsx)), or tap a row in Students/Lecturers to open [`app/(admin)/user/[id].tsx`](<app/(admin)/user/[id].tsx>) and tap the photo to replace it. Students/Lecturers just see their own photo (or initials, if none is set) — they can't change it themselves. Uploads go to the public `avatars` Storage bucket via [`services/storage.ts`](services/storage.ts); each upload gets a unique filename so there's no stale-cache issue when a photo is replaced.

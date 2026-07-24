@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 import { RoleBadge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { formatDate, formatTime } from "@/lib/date";
 import type { AttendanceWithProfile } from "@/types/database";
@@ -9,8 +10,15 @@ import type { AttendanceWithProfile } from "@/types/database";
 export function AttendanceListItem({ record }: { record: AttendanceWithProfile }) {
   return (
     <Card className="mb-3 flex-row items-center gap-3">
-      <View className="h-10 w-10 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/40">
-        <Ionicons name="checkmark-circle" size={22} color="#2563eb" />
+      <View>
+        <Avatar
+          uri={record.profile?.avatar_url}
+          name={record.profile?.full_name ?? "?"}
+          size={40}
+        />
+        <View className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-emerald-500 border-2 border-white dark:border-slate-800">
+          <Ionicons name="checkmark" size={9} color="#ffffff" />
+        </View>
       </View>
       <View className="flex-1 gap-1">
         <Text className="font-semibold text-slate-900 dark:text-white">

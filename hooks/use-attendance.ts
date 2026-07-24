@@ -7,6 +7,7 @@ import {
   getTodayCount,
   recordAttendance,
 } from "@/services/attendance";
+import type { Role } from "@/types/database";
 
 export function useAttendanceHistory(userId: string | undefined) {
   return useQuery({
@@ -42,8 +43,15 @@ export function useRecordAttendance() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ userId, recordedBy }: { userId: string; recordedBy: string }) =>
-      recordAttendance(userId, recordedBy),
+    mutationFn: ({
+      userId,
+      recordedBy,
+      recordedByRole,
+    }: {
+      userId: string;
+      recordedBy: string;
+      recordedByRole: Extract<Role, "admin" | "lecturer">;
+    }) => recordAttendance(userId, recordedBy, recordedByRole),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["attendance"] });
     },

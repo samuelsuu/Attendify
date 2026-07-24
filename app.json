@@ -44,6 +44,14 @@
         {
           "cameraPermission": "Allow the app to access your camera to scan attendance QR codes."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow the app to access your photos to set a profile picture.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
       ]
     ],
     "experiments": {

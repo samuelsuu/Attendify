@@ -42,7 +42,14 @@ export default function LecturersScreen() {
               message="Lecturers you create in Supabase will appear here."
             />
           }
-          renderItem={({ item }) => <UserListItem profile={item} />}
+          renderItem={({ item }) => (
+            <UserListItem
+              profile={item}
+              onPress={() =>
+                router.push({ pathname: "/(admin)/user/[id]", params: { id: item.id } })
+              }
+            />
+          )}
         />
       )}
     </SafeAreaView>

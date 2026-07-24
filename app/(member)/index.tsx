@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { RoleBadge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { QrCodeCard } from "@/components/qr-code-card";
@@ -21,18 +22,21 @@ export default function MemberHomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
       <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }}>
-        <Animated.View entering={FadeInDown.duration(400)} className="gap-2">
-          <View className="flex-row items-center gap-1.5">
-            <Ionicons name="sparkles-outline" size={16} color="#2563eb" />
-            <Text className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Welcome back,
-            </Text>
-          </View>
-          <View className="flex-row items-center justify-between">
-            <Text className="text-2xl font-bold text-slate-900 dark:text-white">
-              {profile.full_name}
-            </Text>
-            <RoleBadge role={profile.role} />
+        <Animated.View entering={FadeInDown.duration(400)} className="flex-row items-center gap-3.5">
+          <Avatar uri={profile.avatar_url} name={profile.full_name} size={52} />
+          <View className="flex-1 gap-2">
+            <View className="flex-row items-center gap-1.5">
+              <Ionicons name="sparkles-outline" size={16} color="#2563eb" />
+              <Text className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                Welcome back,
+              </Text>
+            </View>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-2xl font-bold text-slate-900 dark:text-white">
+                {profile.full_name}
+              </Text>
+              <RoleBadge role={profile.role} />
+            </View>
           </View>
         </Animated.View>
 
@@ -57,7 +61,7 @@ export default function MemberHomeScreen() {
           <QrCodeCard value={profile.id} />
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(150).duration(400)} className="items-center">
+        {/* <Animated.View entering={FadeInDown.delay(150).duration(400)} className="items-center">
           <Pressable
             onPress={() => router.push("/onboarding")}
             className="flex-row items-center gap-1.5 py-2 px-4 rounded-full bg-slate-200/60 dark:bg-slate-800"
@@ -67,7 +71,7 @@ export default function MemberHomeScreen() {
               How attendance works
             </Text>
           </Pressable>
-        </Animated.View>
+        </Animated.View> */}
       </ScrollView>
     </SafeAreaView>
   );

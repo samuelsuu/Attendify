@@ -30,3 +30,11 @@ export async function listByRole(role: Role): Promise<Profile[]> {
   if (error) throw error;
   return data;
 }
+
+export async function updateAvatarUrl(userId: string, avatarUrl: string): Promise<void> {
+  const { error } = await supabase
+    .from("profiles")
+    .update({ avatar_url: avatarUrl })
+    .eq("id", userId);
+  if (error) throw error;
+}

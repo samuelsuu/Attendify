@@ -19,7 +19,7 @@ export function QrCodeCard({ value }: { value: string }) {
       <View className="flex-row items-center gap-1.5 px-4">
         <Ionicons name="information-circle-outline" size={16} color="#64748b" />
         <Text className="text-center text-xs font-medium text-slate-500 dark:text-slate-400">
-          Show this code to an admin or lecturer to record attendance
+          Show this code to an admin
         </Text>
       </View>
     </Card>

@@ -64,6 +64,7 @@ export default function AdminTabsLayout() {
         }}
       />
       <Tabs.Screen name="create-user" options={{ href: null }} />
+      <Tabs.Screen name="user/[id]" options={{ href: null }} />
     </Tabs>
   );
 }

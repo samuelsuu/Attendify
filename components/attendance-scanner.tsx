@@ -48,6 +48,7 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
 
   async function handleBarcodeScanned({ data }: BarcodeScanningResult) {
     if (scanned || processing || !profile) return;
+    if (profile.role !== "admin" && profile.role !== "lecturer") return;
     setScanned(true);
     setProcessing(true);
 
@@ -70,12 +71,13 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
       const result = await recordAttendance.mutateAsync({
         userId: scannedProfile.id,
         recordedBy: profile.id,
+        recordedByRole: profile.role,
       });
 
       if (result.status === "already_recorded") {
         Alert.alert(
           "Already recorded",
-          `Attendance already recorded for ${scannedProfile.full_name} today.`
+          `You've already marked ${scannedProfile.full_name} present today.`
         );
       } else {
         showSuccessToast(`${scannedProfile.full_name} (${scannedProfile.role}) marked present`);

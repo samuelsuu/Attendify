@@ -13,9 +13,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { AvatarPicker } from "@/components/avatar-picker";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useCreateAccount } from "@/hooks/use-admin";
+import { useCreateAccount, useUpdateAvatar } from "@/hooks/use-admin";
 import { generateTempPassword } from "@/lib/password";
 import type { Role } from "@/types/database";
 
@@ -30,9 +31,11 @@ export default function CreateUserScreen() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(generateTempPassword());
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const createAccount = useCreateAccount();
+  const updateAvatar = useUpdateAvatar();
 
   async function handleCreate() {
     setError(null);
@@ -44,6 +47,14 @@ export default function CreateUserScreen() {
         role,
       });
 
+      if (avatarUri) {
+        try {
+          await updateAvatar.mutateAsync({ userId: account.id, localUri: avatarUri });
+        } catch {
+          // Account already exists at this point — don't block on a photo failure.
+        }
+      }
+
       Alert.alert(
         "Account created",
         `${account.fullName} can now sign in with:\n\nEmail: ${account.email}\nPassword: ${password}\n\nShare these credentials with them securely.`,
@@ -54,6 +65,7 @@ export default function CreateUserScreen() {
     }
   }
 
+  const isSubmitting = createAccount.isPending || updateAvatar.isPending;
   const isValid = fullName.trim().length > 0 && email.trim().length > 0 && password.length >= 8;
 
   return (
@@ -73,6 +85,12 @@ export default function CreateUserScreen() {
           </View>
 
           <Card className="gap-4">
+            <AvatarPicker
+              uri={avatarUri}
+              name={fullName || "?"}
+              onPick={setAvatarUri}
+            />
+
             <View className="gap-1.5">
               <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
                 Account Role
@@ -188,7 +206,7 @@ export default function CreateUserScreen() {
               label="Create account"
               icon="person-add-outline"
               onPress={handleCreate}
-              loading={createAccount.isPending}
+              loading={isSubmitting}
               disabled={!isValid}
             />
           </Card>

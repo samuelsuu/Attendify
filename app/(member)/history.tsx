@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -52,6 +53,14 @@ export default function HistoryScreen() {
                   Recorded at {formatTime(item.recorded_at)}
                 </Text>
               </View>
+              {item.recorded_by_role ? (
+                <View className="items-end gap-1">
+                  <Text className="text-[10px] uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                    Marked by
+                  </Text>
+                  <RoleBadge role={item.recorded_by_role} />
+                </View>
+              ) : null}
             </Card>
           )}
         />

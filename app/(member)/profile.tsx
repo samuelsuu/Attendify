@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { RoleBadge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -33,11 +34,7 @@ export default function ProfileScreen() {
         </View>
 
         <Card className="items-center gap-3 py-8">
-          <View className="h-20 w-20 items-center justify-center rounded-full bg-blue-600 shadow-md">
-            <Text className="text-3xl font-bold text-white">
-              {profile.full_name.charAt(0).toUpperCase()}
-            </Text>
-          </View>
+          <Avatar uri={profile.avatar_url} name={profile.full_name} size={80} />
           <Text className="text-lg font-bold text-slate-900 dark:text-white">
             {profile.full_name}
           </Text>

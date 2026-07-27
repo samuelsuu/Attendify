@@ -1,25 +1,27 @@
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
+import { FONT_SIZE, RADIUS, ROLE_COLORS, SPACING } from "@/constants/theme";
 import type { Role } from "@/types/database";
 
-const ROLE_CLASSES: Record<Role, string> = {
-  admin: "bg-purple-100 dark:bg-purple-900/40",
-  student: "bg-blue-100 dark:bg-blue-900/40",
-  lecturer: "bg-emerald-100 dark:bg-emerald-900/40",
-};
-
-const ROLE_TEXT_CLASSES: Record<Role, string> = {
-  admin: "text-purple-700 dark:text-purple-300",
-  student: "text-blue-700 dark:text-blue-300",
-  lecturer: "text-emerald-700 dark:text-emerald-300",
-};
-
 export function RoleBadge({ role }: { role: Role }) {
+  const { bg, text } = ROLE_COLORS[role];
+
   return (
-    <View className={`rounded-full px-3 py-1 ${ROLE_CLASSES[role]}`}>
-      <Text className={`text-xs font-semibold capitalize ${ROLE_TEXT_CLASSES[role]}`}>
-        {role}
-      </Text>
+    <View style={[styles.badge, { backgroundColor: bg }]}>
+      <Text style={[styles.label, { color: text }]}>{role}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: 4,
+  },
+  label: {
+    fontSize: FONT_SIZE.xs,
+    fontWeight: "600",
+    textTransform: "capitalize",
+  },
+});

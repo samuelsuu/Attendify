@@ -1,99 +1,99 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { RoleBadge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { RoleBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
-import { useOnboarding } from "@/hooks/use-onboarding";
 
 export default function ProfileScreen() {
   const { profile, signOut } = useAuth();
-  const router = useRouter();
-  const { resetOnboarding } = useOnboarding();
 
   if (!profile) {
     return <LoadingSpinner />;
   }
 
-  async function handleReplayOnboarding() {
-    await resetOnboarding();
-    router.push("/onboarding");
-  }
-
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
-      <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }}>
-        <View className="flex-row items-center gap-2">
-          <Ionicons name="person-circle-outline" size={28} color="#2563eb" />
-          <Text className="text-2xl font-bold text-slate-900 dark:text-white">Profile</Text>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
+          <Ionicons name="person-circle-outline" size={28} color={COLORS.primary} />
+          <Text style={styles.title}>Profile</Text>
         </View>
 
-        <Card className="items-center gap-3 py-8">
+        <Card style={styles.avatarCard}>
           <Avatar uri={profile.avatar_url} name={profile.full_name} size={80} />
-          <Text className="text-lg font-bold text-slate-900 dark:text-white">
-            {profile.full_name}
-          </Text>
+          <Text style={styles.name}>{profile.full_name}</Text>
           <RoleBadge role={profile.role} />
         </Card>
 
-        <Card className="gap-4">
-          <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Account Info
-          </Text>
-          <View className="flex-row items-center gap-3">
-            <View className="h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
-              <Ionicons name="mail-outline" size={18} color="#2563eb" />
+        <Card style={styles.infoCard}>
+          <Text style={styles.sectionLabel}>Account Info</Text>
+          <View style={styles.infoRow}>
+            <View style={styles.infoIcon}>
+              <Ionicons name="mail-outline" size={18} color={COLORS.primary} />
             </View>
-            <View className="flex-1">
-              <Text className="text-xs text-slate-500 dark:text-slate-400">Email</Text>
-              <Text className="text-sm font-medium text-slate-900 dark:text-white">
-                {profile.email}
-              </Text>
+            <View style={styles.infoText}>
+              <Text style={styles.infoLabel}>Email</Text>
+              <Text style={styles.infoValue}>{profile.email}</Text>
             </View>
           </View>
-          <View className="flex-row items-center gap-3">
-            <View className="h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
-              <Ionicons name="finger-print-outline" size={18} color="#2563eb" />
+          <View style={styles.infoRow}>
+            <View style={styles.infoIcon}>
+              <Ionicons name="finger-print-outline" size={18} color={COLORS.primary} />
             </View>
-            <View className="flex-1">
-              <Text className="text-xs text-slate-500 dark:text-slate-400">User ID</Text>
-              <Text className="text-sm font-medium text-slate-900 dark:text-white">
-                {profile.id}
-              </Text>
+            <View style={styles.infoText}>
+              <Text style={styles.infoLabel}>User ID</Text>
+              <Text style={styles.infoValue}>{profile.id}</Text>
             </View>
           </View>
-          <View className="flex-row items-center gap-3">
-            <View className="h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
-              <Ionicons name="shield-outline" size={18} color="#2563eb" />
+          <View style={styles.infoRow}>
+            <View style={styles.infoIcon}>
+              <Ionicons name="shield-outline" size={18} color={COLORS.primary} />
             </View>
-            <View className="flex-1">
-              <Text className="text-xs text-slate-500 dark:text-slate-400">Role</Text>
-              <Text className="text-sm font-medium capitalize text-slate-900 dark:text-white">
-                {profile.role}
-              </Text>
+            <View style={styles.infoText}>
+              <Text style={styles.infoLabel}>Role</Text>
+              <Text style={[styles.infoValue, styles.capitalize]}>{profile.role}</Text>
             </View>
           </View>
         </Card>
-
-        {/* <Card className="gap-3">
-          <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            App Help & Onboarding
-          </Text>
-          <Button
-            label="Replay Onboarding Tour"
-            variant="outline"
-            icon="sparkles-outline"
-            onPress={handleReplayOnboarding}
-          />
-        </Card> */}
 
         <Button label="Sign out" icon="log-out-outline" variant="danger" onPress={signOut} />
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+  header: { flexDirection: "row", alignItems: "center", gap: SPACING.sm },
+  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  avatarCard: { alignItems: "center", gap: SPACING.md, paddingVertical: SPACING.xxl },
+  name: { fontSize: FONT_SIZE.xl, fontWeight: "700", color: COLORS.textPrimary },
+  infoCard: { gap: SPACING.lg },
+  sectionLabel: {
+    fontSize: FONT_SIZE.xs,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    color: COLORS.textMuted,
+  },
+  infoRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+  infoIcon: {
+    height: 36,
+    width: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: RADIUS.md,
+    backgroundColor: COLORS.primaryLight,
+  },
+  infoText: { flex: 1 },
+  infoLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+  infoValue: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textPrimary },
+  capitalize: { textTransform: "capitalize" },
+});

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AvatarPicker } from "@/components/avatar-picker";
@@ -8,6 +8,7 @@ import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useUpdateAvatar } from "@/hooks/use-admin";
 import { useProfileById } from "@/hooks/use-profile";
 
@@ -23,12 +24,12 @@ export default function UserDetailScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
-      <View className="flex-row items-center gap-3 px-5 pb-2 pt-4">
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <View style={styles.header}>
         <Pressable onPress={() => router.back()} hitSlop={12}>
-          <Ionicons name="arrow-back" size={24} color="#2563eb" />
+          <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
         </Pressable>
-        <Text className="text-2xl font-bold text-slate-900 dark:text-white">Profile</Text>
+        <Text style={styles.title}>Profile</Text>
       </View>
 
       {isLoading ? (
@@ -36,8 +37,8 @@ export default function UserDetailScreen() {
       ) : !profile ? (
         <EmptyState icon="person-outline" title="User not found" />
       ) : (
-        <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }}>
-          <Card className="items-center gap-3 py-8">
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <Card style={styles.avatarCard}>
             <AvatarPicker
               uri={profile.avatar_url}
               name={profile.full_name}
@@ -45,37 +46,29 @@ export default function UserDetailScreen() {
               loading={updateAvatar.isPending}
               onPick={handlePickAvatar}
             />
-            <Text className="text-xs font-medium text-blue-600">Tap photo to change</Text>
-            <Text className="text-lg font-bold text-slate-900 dark:text-white">
-              {profile.full_name}
-            </Text>
+            <Text style={styles.changePhotoHint}>Tap photo to change</Text>
+            <Text style={styles.name}>{profile.full_name}</Text>
             <RoleBadge role={profile.role} />
           </Card>
 
-          <Card className="gap-4">
-            <Text className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Account Info
-            </Text>
-            <View className="flex-row items-center gap-3">
-              <View className="h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
-                <Ionicons name="mail-outline" size={18} color="#2563eb" />
+          <Card style={styles.infoCard}>
+            <Text style={styles.sectionLabel}>Account Info</Text>
+            <View style={styles.infoRow}>
+              <View style={styles.infoIcon}>
+                <Ionicons name="mail-outline" size={18} color={COLORS.primary} />
               </View>
-              <View className="flex-1">
-                <Text className="text-xs text-slate-500 dark:text-slate-400">Email</Text>
-                <Text className="text-sm font-medium text-slate-900 dark:text-white">
-                  {profile.email}
-                </Text>
+              <View style={styles.infoText}>
+                <Text style={styles.infoLabel}>Email</Text>
+                <Text style={styles.infoValue}>{profile.email}</Text>
               </View>
             </View>
-            <View className="flex-row items-center gap-3">
-              <View className="h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
-                <Ionicons name="finger-print-outline" size={18} color="#2563eb" />
+            <View style={styles.infoRow}>
+              <View style={styles.infoIcon}>
+                <Ionicons name="finger-print-outline" size={18} color={COLORS.primary} />
               </View>
-              <View className="flex-1">
-                <Text className="text-xs text-slate-500 dark:text-slate-400">User ID</Text>
-                <Text className="text-sm font-medium text-slate-900 dark:text-white">
-                  {profile.id}
-                </Text>
+              <View style={styles.infoText}>
+                <Text style={styles.infoLabel}>User ID</Text>
+                <Text style={styles.infoValue}>{profile.id}</Text>
               </View>
             </View>
           </Card>
@@ -84,3 +77,40 @@ export default function UserDetailScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.md,
+    paddingHorizontal: SPACING.xl,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.sm,
+  },
+  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+  avatarCard: { alignItems: "center", gap: SPACING.md, paddingVertical: SPACING.xxl },
+  changePhotoHint: { fontSize: FONT_SIZE.xs, fontWeight: "500", color: COLORS.primary },
+  name: { fontSize: FONT_SIZE.xl, fontWeight: "700", color: COLORS.textPrimary },
+  infoCard: { gap: SPACING.lg },
+  sectionLabel: {
+    fontSize: FONT_SIZE.xs,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    color: COLORS.textMuted,
+  },
+  infoRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+  infoIcon: {
+    height: 36,
+    width: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: RADIUS.md,
+    backgroundColor: COLORS.primaryLight,
+  },
+  infoText: { flex: 1 },
+  infoLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+  infoValue: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textPrimary },
+});

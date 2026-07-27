@@ -6,14 +6,16 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginScreen() {
@@ -38,41 +40,23 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-blue-600 dark:bg-slate-950">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        className="flex-1"
-      >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View className="flex-1 justify-center px-6 py-10">
-            <Animated.View
-              entering={FadeInDown.duration(400)}
-              className="mb-8 items-center gap-3"
-            >
-              <View className="h-16 w-16 items-center justify-center rounded-2xl bg-white/15 shadow-sm border border-white/20">
-                <Ionicons name="school" size={34} color="#ffffff" />
+    <SafeAreaView style={styles.screen}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
+        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+          <View style={styles.centerColumn}>
+            <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
+              <View style={styles.logo}>
+                <Ionicons name="school" size={34} color={COLORS.white} />
               </View>
-              <Text className="text-3xl font-extrabold text-white tracking-tight">
-                Attendify
-              </Text>
-              <Text className="text-sm font-medium text-blue-100">
-                Sign in to your account
-              </Text>
+              <Text style={styles.appName}>Webcapz</Text>
+              <Text style={styles.tagline}>Sign in to your account</Text>
             </Animated.View>
 
-            <Animated.View
-              entering={FadeInDown.delay(100).duration(400)}
-              className="gap-4 rounded-3xl bg-white p-6 shadow-xl dark:bg-slate-900"
-            >
-              <View className="gap-1.5">
-                <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  Email address
-                </Text>
-                <View className="flex-row items-center rounded-xl border border-slate-200 px-3.5 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50">
-                  <Ionicons name="mail-outline" size={20} color="#64748b" />
+            <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.card}>
+              <View style={styles.field}>
+                <Text style={styles.fieldLabel}>Email address</Text>
+                <View style={styles.inputRow}>
+                  <Ionicons name="mail-outline" size={20} color={COLORS.textSecondary} />
                   <TextInput
                     value={email}
                     onChangeText={setEmail}
@@ -80,46 +64,39 @@ export default function LoginScreen() {
                     autoComplete="email"
                     keyboardType="email-address"
                     placeholder="you@university.edu"
-                    placeholderTextColor="#94a3b8"
-                    className="flex-1 py-3 px-2.5 text-base text-slate-900 dark:text-white"
+                    placeholderTextColor={COLORS.textMuted}
+                    style={styles.input}
                   />
                 </View>
               </View>
 
-              <View className="gap-1.5">
-                <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  Password
-                </Text>
-                <View className="flex-row items-center rounded-xl border border-slate-200 px-3.5 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50">
-                  <Ionicons name="lock-closed-outline" size={20} color="#64748b" />
+              <View style={styles.field}>
+                <Text style={styles.fieldLabel}>Password</Text>
+                <View style={styles.inputRow}>
+                  <Ionicons name="lock-closed-outline" size={20} color={COLORS.textSecondary} />
                   <TextInput
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
                     placeholder="••••••••"
-                    placeholderTextColor="#94a3b8"
-                    className="flex-1 py-3 px-2.5 text-base text-slate-900 dark:text-white"
+                    placeholderTextColor={COLORS.textMuted}
+                    style={styles.input}
                   />
-                  <Pressable
-                    onPress={() => setShowPassword((prev) => !prev)}
-                    hitSlop={8}
-                  >
+                  <Pressable onPress={() => setShowPassword((prev) => !prev)} hitSlop={8}>
                     <Ionicons
                       name={showPassword ? "eye-off-outline" : "eye-outline"}
                       size={20}
-                      color="#64748b"
+                      color={COLORS.textSecondary}
                     />
                   </Pressable>
                 </View>
               </View>
 
               {error ? (
-                <View className="flex-row items-center gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950/50 border border-red-200 dark:border-red-800">
-                  <Ionicons name="alert-circle-outline" size={18} color="#dc2626" />
-                  <Text className="flex-1 text-xs font-medium text-red-600 dark:text-red-400">
-                    {error}
-                  </Text>
+                <View style={styles.errorBox}>
+                  <Ionicons name="alert-circle-outline" size={18} color={COLORS.danger} />
+                  <Text style={styles.errorText}>{error}</Text>
                 </View>
               ) : null}
 
@@ -129,17 +106,12 @@ export default function LoginScreen() {
                 onPress={handleSignIn}
                 loading={loading}
                 disabled={!email || !password}
-                className="mt-2"
+                style={styles.signInButton}
               />
 
-              <Pressable
-                onPress={() => router.push("/onboarding")}
-                className="mt-2 flex-row items-center justify-center gap-1.5 py-1"
-              >
-                <Ionicons name="sparkles-outline" size={16} color="#2563eb" />
-                <Text className="text-xs font-semibold text-blue-600 dark:text-blue-400">
-                  View App Tour & Onboarding
-                </Text>
+              <Pressable onPress={() => router.push("/onboarding")} style={styles.tourLink}>
+                <Ionicons name="sparkles-outline" size={16} color={COLORS.primary} />
+                <Text style={styles.tourLinkText}>View App Tour &amp; Onboarding</Text>
               </Pressable>
             </Animated.View>
           </View>
@@ -148,3 +120,68 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.primaryDark },
+  flex: { flex: 1 },
+  scrollContent: { flexGrow: 1 },
+  centerColumn: { flex: 1, justifyContent: "center", paddingHorizontal: SPACING.xl, paddingVertical: 40 },
+  header: { marginBottom: SPACING.xxl, alignItems: "center", gap: SPACING.md },
+  logo: {
+    height: 64,
+    width: 64,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: RADIUS.xl,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+  },
+  appName: { fontSize: FONT_SIZE.hero, fontWeight: "800", color: COLORS.white, letterSpacing: -0.5 },
+  tagline: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.muted },
+  card: {
+    gap: SPACING.lg,
+    borderRadius: RADIUS.xxl,
+    backgroundColor: COLORS.white,
+    padding: SPACING.xxl,
+    shadowColor: COLORS.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 6,
+  },
+  field: { gap: 6 },
+  fieldLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textPrimary },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: SPACING.md,
+    backgroundColor: COLORS.mutedLight,
+  },
+  input: { flex: 1, paddingVertical: SPACING.md, fontSize: FONT_SIZE.lg, color: COLORS.textPrimary },
+  errorBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    backgroundColor: COLORS.dangerLight,
+    borderWidth: 1,
+    borderColor: COLORS.dangerBorder,
+  },
+  errorText: { flex: 1, fontSize: FONT_SIZE.xs, fontWeight: "500", color: COLORS.danger },
+  signInButton: { marginTop: SPACING.xs },
+  tourLink: {
+    marginTop: SPACING.xs,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 4,
+  },
+  tourLinkText: { fontSize: FONT_SIZE.xs, fontWeight: "600", color: COLORS.primary },
+});

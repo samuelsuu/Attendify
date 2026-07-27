@@ -1,12 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useColorScheme } from "react-native";
 
+import { COLORS } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function MemberTabsLayout() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
   const { profile } = useAuth();
   const isLecturer = profile?.role === "lecturer";
 
@@ -14,11 +12,11 @@ export default function MemberTabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#2563eb",
-        tabBarInactiveTintColor: isDark ? "#64748b" : "#94a3b8",
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.textMuted,
         tabBarStyle: {
-          backgroundColor: isDark ? "#0f172a" : "#ffffff",
-          borderTopColor: isDark ? "#1e293b" : "#e2e8f0",
+          backgroundColor: COLORS.white,
+          borderTopColor: COLORS.border,
         },
       }}
     >

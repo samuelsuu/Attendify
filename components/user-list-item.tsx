@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
+import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import type { Profile } from "@/types/database";
 
 export function UserListItem({
@@ -21,22 +22,29 @@ export function UserListItem({
 
   return (
     <Pressable onPress={onPress} disabled={!onPress}>
-      <Card className="mb-3 flex-row items-center gap-3">
+      <Card style={styles.card}>
         <Avatar uri={profile.avatar_url} name={profile.full_name} size={44} />
-        <View className="flex-1 gap-1">
-          <View className="flex-row items-center gap-1.5">
-            <Text className="font-bold text-slate-900 dark:text-white">
-              {profile.full_name}
-            </Text>
-            <Ionicons name={roleIcon} size={14} color="#2563eb" />
+        <View style={styles.info}>
+          <View style={styles.nameRow}>
+            <Text style={styles.name}>{profile.full_name}</Text>
+            <Ionicons name={roleIcon} size={14} color={COLORS.primary} />
           </View>
-          <View className="flex-row items-center gap-1">
-            <Ionicons name="mail-outline" size={12} color="#94a3b8" />
-            <Text className="text-xs text-slate-500 dark:text-slate-400">{profile.email}</Text>
+          <View style={styles.emailRow}>
+            <Ionicons name="mail-outline" size={12} color={COLORS.textMuted} />
+            <Text style={styles.email}>{profile.email}</Text>
           </View>
         </View>
-        {onPress ? <Ionicons name="chevron-forward" size={18} color="#94a3b8" /> : null}
+        {onPress ? <Ionicons name="chevron-forward" size={18} color={COLORS.textMuted} /> : null}
       </Card>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  card: { marginBottom: SPACING.md, flexDirection: "row", alignItems: "center", gap: SPACING.md },
+  info: { flex: 1, gap: 4 },
+  nameRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  name: { fontWeight: "700", color: COLORS.textPrimary, fontSize: FONT_SIZE.md },
+  emailRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+  email: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+});

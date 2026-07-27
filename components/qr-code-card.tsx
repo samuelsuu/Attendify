@@ -1,27 +1,44 @@
 import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import { Text, View } from "react-native";
 
 import { Card } from "@/components/ui/card";
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 
 export function QrCodeCard({ value }: { value: string }) {
   return (
-    <Card className="items-center gap-4 py-8">
-      <View className="flex-row items-center gap-2">
-        <Ionicons name="qr-code-outline" size={20} color="#2563eb" />
-        <Text className="text-base font-bold text-slate-900 dark:text-white">
-          Your Digital Pass
-        </Text>
+    <Card style={styles.card}>
+      <View style={styles.header}>
+        <Ionicons name="qr-code-outline" size={20} color={COLORS.primary} />
+        <Text style={styles.title}>Your Digital Pass</Text>
       </View>
-      <View className="rounded-3xl bg-white p-5 shadow-lg border border-slate-100">
-        <QRCode value={value} size={200} color="#0f172a" backgroundColor="#ffffff" />
+      <View style={styles.qrWrap}>
+        <QRCode value={value} size={200} color={COLORS.primaryDark} backgroundColor={COLORS.white} />
       </View>
-      <View className="flex-row items-center gap-1.5 px-4">
-        <Ionicons name="information-circle-outline" size={16} color="#64748b" />
-        <Text className="text-center text-xs font-medium text-slate-500 dark:text-slate-400">
-          Show this code to an admin
-        </Text>
+      <View style={styles.footer}>
+        <Ionicons name="information-circle-outline" size={16} color={COLORS.textMuted} />
+        <Text style={styles.footerText}>Show this code to an admin</Text>
       </View>
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  card: { alignItems: "center", gap: SPACING.lg, paddingVertical: SPACING.xxl },
+  header: { flexDirection: "row", alignItems: "center", gap: SPACING.sm },
+  title: { fontSize: FONT_SIZE.lg, fontWeight: "700", color: COLORS.textPrimary },
+  qrWrap: {
+    borderRadius: RADIUS.xxl,
+    backgroundColor: COLORS.white,
+    padding: SPACING.xl,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    shadowColor: COLORS.shadow,
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+  footer: { flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: SPACING.md },
+  footerText: { textAlign: "center", fontSize: FONT_SIZE.sm, fontWeight: "500", color: COLORS.textSecondary },
+});

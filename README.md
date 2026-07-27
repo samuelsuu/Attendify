@@ -1,11 +1,11 @@
-# Attendify
+# Webcapz
 
-A smart attendance management app built with Expo Router, NativeWind, Supabase, and React Query. Three roles — **Admin**, **Student**, **Lecturer** — each with their own experience behind Supabase-authenticated, role-gated routes.
+A smart attendance management app built with Expo Router, Supabase, and React Query. Three roles — **Admin**, **Student**, **Lecturer** — each with their own experience behind Supabase-authenticated, role-gated routes.
 
 ## Stack
 
 - Expo (SDK 54) + Expo Router + TypeScript
-- NativeWind (Tailwind CSS for React Native)
+- Plain React Native `StyleSheet` for styling — no NativeWind/Tailwind. All colors, spacing, and radii come from [`constants/theme.ts`](constants/theme.ts), a single light theme (no dark mode).
 - Supabase (Auth + Postgres + Row Level Security)
 - TanStack React Query
 - `expo-camera` (QR scanning) + `react-native-qrcode-svg` (QR generation)
@@ -69,6 +69,7 @@ Scan the QR with Expo Go, or run on a simulator (`npx expo start --ios` / `--and
 ```
 app/              Expo Router screens (login, (member)/, (admin)/)
 components/       Reusable UI (Card, Button, QrCodeCard, list items, ...)
+constants/        theme.ts — the single source of truth for colors/spacing/radii
 hooks/            Auth context + React Query hooks
 services/         Supabase query functions
 lib/              Supabase client, date helpers, query client
@@ -80,7 +81,8 @@ supabase/         schema.sql (run in SQL editor) + functions/create-user (deploy
 
 - Student and Lecturer share the same `(member)` route group. Lecturers additionally get **Scan** and **My Scans** tabs (hidden for students via `href: null`) — they can scan a student's QR to mark attendance, same as admin, and see everyone they've personally recorded. The admin and lecturer scan screens both render the shared [`components/attendance-scanner.tsx`](components/attendance-scanner.tsx).
 - Lecturers can only record attendance for `student` accounts — enforced both client-side (immediate feedback) and in the `attendance_insert` RLS policy (the real, unbypassable check). Admins remain unrestricted.
-- Attendance is unique per `(user_id, date)` at the database level, so "already recorded today" is enforced even under concurrent scans.
-- Dark mode follows the system appearance automatically via NativeWind.
+- Attendance is unique per `(user_id, date, recorded_by_role)` at the database level — an admin's scan and a lecturer's scan of the same student on the same day are separate records, but the same role scanning the same person twice in one day is rejected as a duplicate even under concurrent scans.
+- One light theme only, no dark mode — every color/spacing/radius value is defined once in [`constants/theme.ts`](constants/theme.ts) and used via `StyleSheet.create()` in each component; there's no `className`/Tailwind anywhere in the app.
 - Admin-created accounts get `email_confirm: true` from the Edge Function, so they can sign in immediately with the password the admin sets — no email confirmation step.
 - Profile pictures are admin-managed only: pick one while creating an account ([`app/(admin)/create-user.tsx`](app/(admin)/create-user.tsx)), or tap a row in Students/Lecturers to open [`app/(admin)/user/[id].tsx`](<app/(admin)/user/[id].tsx>) and tap the photo to replace it. Students/Lecturers just see their own photo (or initials, if none is set) — they can't change it themselves. Uploads go to the public `avatars` Storage bucket via [`services/storage.ts`](services/storage.ts); each upload gets a unique filename so there's no stale-cache issue when a photo is replaced.
+- The onboarding slides ([`app/onboarding.tsx`](app/onboarding.tsx)) use images, not icons, from `assets/images/onboarding/`. The four files there (`welcome.png`, `qr-scanning.png`, `analytics.png`, `roles.png`) are currently **solid-color placeholders** — swap them for real illustrations/photos whenever you have them; same filenames, any reasonable image size (they render at full width, ~280pt tall).

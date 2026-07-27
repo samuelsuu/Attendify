@@ -1,17 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import {
   CameraView,
-  type BarcodeScanningResult,
   useCameraPermissions,
+  type BarcodeScanningResult,
 } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
 import { Toast } from "@/components/ui/toast";
-import { useAuth } from "@/hooks/use-auth";
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useRecordAttendance } from "@/hooks/use-attendance";
+import { useAuth } from "@/hooks/use-auth";
 import { getProfileById } from "@/services/profiles";
 import type { Role } from "@/types/database";
 
@@ -93,19 +94,17 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
   }
 
   if (!permission) {
-    return <View className="flex-1 bg-slate-950" />;
+    return <View style={styles.blank} />;
   }
 
   if (!permission.granted) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center gap-4 bg-slate-50 px-8 dark:bg-slate-950">
-        <View className="h-20 w-20 items-center justify-center rounded-3xl bg-blue-50 dark:bg-blue-900/30">
-          <Ionicons name="camera-outline" size={42} color="#2563eb" />
+      <SafeAreaView style={styles.permissionScreen}>
+        <View style={styles.permissionIconWrap}>
+          <Ionicons name="camera-outline" size={42} color={COLORS.primary} />
         </View>
-        <Text className="text-center text-xl font-bold text-slate-900 dark:text-white">
-          Camera Access Needed
-        </Text>
-        <Text className="text-center text-sm text-slate-500 dark:text-slate-400 max-w-xs">
+        <Text style={styles.permissionTitle}>Camera Access Needed</Text>
+        <Text style={styles.permissionBody}>
           Allow camera permissions to scan QR codes for attendance tracking.
         </Text>
         <Button label="Grant camera permission" icon="camera-outline" onPress={requestPermission} />
@@ -114,51 +113,44 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
   }
 
   return (
-    <View className="flex-1 bg-black">
+    <View style={styles.container}>
       <CameraView
-        style={{ flex: 1 }}
+        style={StyleSheet.absoluteFillObject}
         facing="back"
         barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
         onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
       />
 
-      <SafeAreaView className="absolute inset-0" pointerEvents="box-none">
-        <View className="gap-3 px-5 pt-4">
-          <View className="flex-row items-center justify-center gap-2 rounded-full bg-black/50 py-2 px-4 self-center">
-            <Ionicons name="scan-outline" size={18} color="#ffffff" />
-            <Text className="text-center text-sm font-semibold text-white">
-              Scan Attendance QR Code
-            </Text>
+      <SafeAreaView style={styles.overlay} pointerEvents="box-none">
+        <View style={styles.topArea}>
+          <View style={styles.pill}>
+            <Ionicons name="scan-outline" size={18} color={COLORS.white} />
+            <Text style={styles.pillText}>Scan Attendance QR Code</Text>
           </View>
           {toastMessage ? <Toast message={toastMessage} /> : null}
         </View>
 
-        <View className="flex-1 items-center justify-center">
-          <View className="h-64 w-64 rounded-3xl border-4 border-blue-500/80 items-center justify-center bg-blue-500/5">
+        <View style={styles.frameArea}>
+          <View style={styles.frame}>
             <Ionicons name="qr-code-outline" size={48} color="rgba(255,255,255,0.4)" />
           </View>
         </View>
 
-        <View className="items-center pb-10">
+        <View style={styles.bottomArea}>
           {processing ? (
-            <View className="flex-row items-center gap-2 rounded-full bg-black/70 px-5 py-3 border border-white/10">
-              <ActivityIndicator color="#ffffff" />
-              <Text className="text-sm font-medium text-white">Verifying code...</Text>
+            <View style={styles.statusPill}>
+              <ActivityIndicator color={COLORS.white} />
+              <Text style={styles.statusText}>Verifying code...</Text>
             </View>
           ) : toastMessage ? null : scanned ? (
-            <Pressable
-              onPress={() => setScanned(false)}
-              className="flex-row items-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 active:bg-blue-700 shadow-lg shadow-blue-600/50"
-            >
-              <Ionicons name="refresh-outline" size={18} color="#ffffff" />
-              <Text className="text-sm font-bold text-white">Scan Next Code</Text>
+            <Pressable onPress={() => setScanned(false)} style={styles.scanAgain}>
+              <Ionicons name="refresh-outline" size={18} color={COLORS.white} />
+              <Text style={styles.scanAgainText}>Scan Next Code</Text>
             </Pressable>
           ) : (
-            <View className="flex-row items-center gap-2 rounded-full bg-black/60 px-4 py-2 border border-white/10">
-              <Ionicons name="sparkles-outline" size={16} color="#60a5fa" />
-              <Text className="text-xs font-medium text-white/90">
-                Align QR code within frame
-              </Text>
+            <View style={styles.hintPill}>
+              <Ionicons name="sparkles-outline" size={16} color={COLORS.primary} />
+              <Text style={styles.hintText}>Align QR code within frame</Text>
             </View>
           )}
         </View>
@@ -166,3 +158,96 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  blank: { flex: 1, backgroundColor: COLORS.primaryDark },
+  permissionScreen: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: SPACING.md,
+    backgroundColor: COLORS.background,
+    paddingHorizontal: SPACING.xxl,
+  },
+  permissionIconWrap: {
+    height: 80,
+    width: 80,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: RADIUS.xxl,
+    backgroundColor: COLORS.primaryLight,
+  },
+  permissionTitle: {
+    textAlign: "center",
+    fontSize: FONT_SIZE.xxl,
+    fontWeight: "700",
+    color: COLORS.textPrimary,
+  },
+  permissionBody: {
+    textAlign: "center",
+    fontSize: FONT_SIZE.md,
+    color: COLORS.textSecondary,
+    maxWidth: 280,
+  },
+  container: { flex: 1, backgroundColor: COLORS.black },
+  overlay: { flex: 1, justifyContent: "space-between" },
+  topArea: { gap: SPACING.md, paddingHorizontal: SPACING.lg, paddingTop: SPACING.md },
+  pill: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.full,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    alignSelf: "center",
+  },
+  pillText: { textAlign: "center", fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.white },
+  frameArea: { alignItems: "center", justifyContent: "center" },
+  frame: {
+    height: 256,
+    width: 256,
+    borderRadius: RADIUS.xxl,
+    borderWidth: 4,
+    borderColor: "rgba(28, 127, 196, 0.8)",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(28, 127, 196, 0.1)",
+  },
+  bottomArea: { alignItems: "center", paddingBottom: 40 },
+  statusPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
+  },
+  statusText: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.white },
+  scanAgain: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: 14,
+    backgroundColor: COLORS.primary,
+  },
+  scanAgainText: { fontSize: FONT_SIZE.md, fontWeight: "700", color: COLORS.white },
+  hintPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
+  },
+  hintText: { fontSize: FONT_SIZE.xs, fontWeight: "500", color: "rgba(255,255,255,0.9)" },
+});

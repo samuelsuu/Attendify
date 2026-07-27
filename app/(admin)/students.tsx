@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { FlatList, Pressable, RefreshControl, Text, View } from "react-native";
+import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { UserListItem } from "@/components/user-list-item";
+import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { useStudents } from "@/hooks/use-profile";
 import type { Profile } from "@/types/database";
 
@@ -14,14 +15,14 @@ export default function StudentsScreen() {
   const { data, isLoading, isRefetching, refetch } = useStudents();
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
-      <View className="flex-row items-center justify-between px-5 pb-2 pt-4">
-        <Text className="text-2xl font-bold text-slate-900 dark:text-white">Students</Text>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Students</Text>
         <Pressable
           onPress={() => router.push({ pathname: "/(admin)/create-user", params: { role: "student" } })}
           hitSlop={12}
         >
-          <Ionicons name="add-circle" size={30} color="#2563eb" />
+          <Ionicons name="add-circle" size={30} color={COLORS.primary} />
         </Pressable>
       </View>
 
@@ -31,9 +32,9 @@ export default function StudentsScreen() {
         <FlatList<Profile>
           data={data ?? []}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: 20, paddingTop: 8, flexGrow: 1 }}
+          contentContainerStyle={styles.listContent}
           refreshControl={
-            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#2563eb" />
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={COLORS.primary} />
           }
           ListEmptyComponent={
             <EmptyState
@@ -55,3 +56,17 @@ export default function StudentsScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: SPACING.xl,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.sm,
+  },
+  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  listContent: { padding: SPACING.xl, paddingTop: SPACING.sm, flexGrow: 1 },
+});

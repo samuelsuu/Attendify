@@ -1,6 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import Animated, { FadeInDown, FadeOutUp } from "react-native-reanimated";
+
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 
 type ToastVariant = "success" | "error" | "info";
 
@@ -8,9 +10,9 @@ const VARIANT_STYLES: Record<
   ToastVariant,
   { bg: string; icon: keyof typeof Ionicons.glyphMap }
 > = {
-  success: { bg: "bg-emerald-600", icon: "checkmark-circle" },
-  error: { bg: "bg-red-600", icon: "close-circle" },
-  info: { bg: "bg-slate-800", icon: "information-circle" },
+  success: { bg: COLORS.accentGreen, icon: "checkmark-circle" },
+  error: { bg: COLORS.danger, icon: "close-circle" },
+  info: { bg: COLORS.primaryDark, icon: "information-circle" },
 };
 
 export function Toast({
@@ -26,10 +28,27 @@ export function Toast({
     <Animated.View
       entering={FadeInDown.duration(250)}
       exiting={FadeOutUp.duration(200)}
-      className={`flex-row items-center gap-2 rounded-2xl px-4 py-3 shadow-lg ${bg}`}
+      style={[styles.toast, { backgroundColor: bg }]}
     >
-      <Ionicons name={icon} size={20} color="#ffffff" />
-      <Text className="flex-1 text-sm font-semibold text-white">{message}</Text>
+      <Ionicons name={icon} size={20} color={COLORS.white} />
+      <Text style={styles.message}>{message}</Text>
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  toast: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.xl,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    shadowColor: COLORS.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4,
+  },
+  message: { flex: 1, fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.white },
+});

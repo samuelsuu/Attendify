@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { ActivityIndicator, Alert, Pressable, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from "react-native";
 
 import { Avatar } from "@/components/ui/avatar";
+import { COLORS } from "@/constants/theme";
 
 type AvatarPickerProps = {
   uri?: string | null;
@@ -36,20 +37,42 @@ export function AvatarPicker({ uri, name, size = 96, loading, onPick }: AvatarPi
   }
 
   return (
-    <Pressable onPress={handlePress} disabled={loading} className="self-center">
+    <Pressable onPress={handlePress} disabled={loading} style={styles.wrap}>
       <Avatar uri={uri} name={name} size={size} />
-      <View
-        className="absolute inset-0 items-center justify-center rounded-full bg-black/40"
-        style={{ opacity: loading ? 1 : 0 }}
-      >
-        <ActivityIndicator color="#ffffff" />
+      <View style={[styles.overlay, { opacity: loading ? 1 : 0 }]}>
+        <ActivityIndicator color={COLORS.white} />
       </View>
-      <View
-        className="absolute bottom-0 right-0 h-8 w-8 items-center justify-center rounded-full bg-blue-600 border-2 border-white dark:border-slate-900"
-        pointerEvents="none"
-      >
-        <Ionicons name="camera" size={16} color="#ffffff" />
+      <View style={styles.badge} pointerEvents="none">
+        <Ionicons name="camera" size={16} color={COLORS.white} />
       </View>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  wrap: { alignSelf: "center" },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 999,
+    backgroundColor: "rgba(11, 61, 99, 0.5)",
+  },
+  badge: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    height: 32,
+    width: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 16,
+    backgroundColor: COLORS.primary,
+    borderWidth: 2,
+    borderColor: COLORS.white,
+  },
+});

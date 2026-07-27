@@ -1,13 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
-import { FlatList, RefreshControl, Text, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { useAuth } from "@/hooks/use-auth";
+import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { useAttendanceHistory } from "@/hooks/use-attendance";
+import { useAuth } from "@/hooks/use-auth";
 import { formatDate, formatTime } from "@/lib/date";
 import type { AttendanceRecord } from "@/types/database";
 
@@ -16,11 +17,9 @@ export default function HistoryScreen() {
   const { data, isLoading, isRefetching, refetch } = useAttendanceHistory(profile?.id);
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
-      <View className="px-5 pb-2 pt-4">
-        <Text className="text-2xl font-bold text-slate-900 dark:text-white">
-          Attendance History
-        </Text>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Attendance History</Text>
       </View>
 
       {isLoading ? (
@@ -29,9 +28,9 @@ export default function HistoryScreen() {
         <FlatList<AttendanceRecord>
           data={data ?? []}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: 20, paddingTop: 8, flexGrow: 1 }}
+          contentContainerStyle={styles.listContent}
           refreshControl={
-            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#2563eb" />
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={COLORS.primary} />
           }
           ListEmptyComponent={
             <EmptyState
@@ -41,23 +40,17 @@ export default function HistoryScreen() {
             />
           }
           renderItem={({ item }) => (
-            <Card className="mb-3 flex-row items-center gap-3">
-              <View className="h-10 w-10 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/40">
-                <Ionicons name="checkmark-circle" size={22} color="#2563eb" />
+            <Card style={styles.row}>
+              <View style={styles.icon}>
+                <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />
               </View>
-              <View className="flex-1 gap-1">
-                <Text className="font-semibold text-slate-900 dark:text-white">
-                  {formatDate(item.date)}
-                </Text>
-                <Text className="text-xs text-slate-500 dark:text-slate-400">
-                  Recorded at {formatTime(item.recorded_at)}
-                </Text>
+              <View style={styles.info}>
+                <Text style={styles.date}>{formatDate(item.date)}</Text>
+                <Text style={styles.time}>Recorded at {formatTime(item.recorded_at)}</Text>
               </View>
               {item.recorded_by_role ? (
-                <View className="items-end gap-1">
-                  <Text className="text-[10px] uppercase tracking-wide text-slate-400 dark:text-slate-500">
-                    Marked by
-                  </Text>
+                <View style={styles.markedBy}>
+                  <Text style={styles.markedByLabel}>Marked by</Text>
                   <RoleBadge role={item.recorded_by_role} />
                 </View>
               ) : null}
@@ -68,3 +61,29 @@ export default function HistoryScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+  header: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg, paddingBottom: SPACING.sm },
+  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  listContent: { padding: SPACING.xl, paddingTop: SPACING.sm, flexGrow: 1 },
+  row: { marginBottom: SPACING.md, flexDirection: "row", alignItems: "center", gap: SPACING.md },
+  icon: {
+    height: 40,
+    width: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    backgroundColor: COLORS.primaryLight,
+  },
+  info: { flex: 1, gap: 4 },
+  date: { fontWeight: "600", color: COLORS.textPrimary, fontSize: FONT_SIZE.md },
+  time: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+  markedBy: { alignItems: "flex-end", gap: 4 },
+  markedByLabel: {
+    fontSize: 10,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    color: COLORS.textMuted,
+  },
+});

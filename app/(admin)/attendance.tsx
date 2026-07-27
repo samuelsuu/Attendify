@@ -1,9 +1,10 @@
-import { FlatList, RefreshControl, Text, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AttendanceListItem } from "@/components/attendance-list-item";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { useAllAttendance } from "@/hooks/use-attendance";
 import type { AttendanceWithProfile } from "@/types/database";
 
@@ -11,11 +12,9 @@ export default function AdminAttendanceScreen() {
   const { data, isLoading, isRefetching, refetch } = useAllAttendance();
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
-      <View className="px-5 pb-2 pt-4">
-        <Text className="text-2xl font-bold text-slate-900 dark:text-white">
-          Attendance
-        </Text>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Attendance</Text>
       </View>
 
       {isLoading ? (
@@ -24,9 +23,9 @@ export default function AdminAttendanceScreen() {
         <FlatList<AttendanceWithProfile>
           data={data ?? []}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: 20, paddingTop: 8, flexGrow: 1 }}
+          contentContainerStyle={styles.listContent}
           refreshControl={
-            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#2563eb" />
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={COLORS.primary} />
           }
           ListEmptyComponent={
             <EmptyState
@@ -41,3 +40,10 @@ export default function AdminAttendanceScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+  header: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg, paddingBottom: SPACING.sm },
+  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  listContent: { padding: SPACING.xl, paddingTop: SPACING.sm, flexGrow: 1 },
+});

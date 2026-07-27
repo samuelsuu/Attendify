@@ -7,6 +7,7 @@ import {
   Platform,
   Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   View,
@@ -16,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AvatarPicker } from "@/components/avatar-picker";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useCreateAccount, useUpdateAvatar } from "@/hooks/use-admin";
 import { generateTempPassword } from "@/lib/password";
 import type { Role } from "@/types/database";
@@ -69,33 +71,22 @@ export default function CreateUserScreen() {
   const isValid = fullName.trim().length > 0 && email.trim().length > 0 && password.length >= 8;
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        className="flex-1"
-      >
-        <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }} keyboardShouldPersistTaps="handled">
-          <View className="flex-row items-center gap-3">
+    <SafeAreaView style={styles.screen} edges={["top"]}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
+        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+          <View style={styles.header}>
             <Pressable onPress={() => router.back()} hitSlop={12}>
-              <Ionicons name="arrow-back" size={24} color="#2563eb" />
+              <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
             </Pressable>
-            <Text className="text-2xl font-bold text-slate-900 dark:text-white">
-              Create account
-            </Text>
+            <Text style={styles.title}>Create account</Text>
           </View>
 
-          <Card className="gap-4">
-            <AvatarPicker
-              uri={avatarUri}
-              name={fullName || "?"}
-              onPick={setAvatarUri}
-            />
+          <Card style={styles.card}>
+            <AvatarPicker uri={avatarUri} name={fullName || "?"} onPick={setAvatarUri} />
 
-            <View className="gap-1.5">
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                Account Role
-              </Text>
-              <View className="flex-row gap-2">
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Account Role</Text>
+              <View style={styles.roleRow}>
                 {(["student", "lecturer"] as MemberRole[]).map((option) => {
                   const isSelected = role === option;
                   const roleIcon = option === "student" ? "school-outline" : "briefcase-outline";
@@ -103,24 +94,14 @@ export default function CreateUserScreen() {
                     <Pressable
                       key={option}
                       onPress={() => setRole(option)}
-                      className={`flex-1 flex-row items-center justify-center gap-2 rounded-xl border py-3 px-3 ${
-                        isSelected
-                          ? "border-blue-600 bg-blue-50 dark:bg-blue-900/40"
-                          : "border-slate-200 dark:border-slate-700"
-                      }`}
+                      style={[styles.roleOption, isSelected && styles.roleOptionSelected]}
                     >
                       <Ionicons
                         name={roleIcon}
                         size={18}
-                        color={isSelected ? "#2563eb" : "#64748b"}
+                        color={isSelected ? COLORS.primary : COLORS.textSecondary}
                       />
-                      <Text
-                        className={`text-sm font-semibold capitalize ${
-                          isSelected
-                            ? "text-blue-700 dark:text-blue-300"
-                            : "text-slate-600 dark:text-slate-300"
-                        }`}
-                      >
+                      <Text style={[styles.roleLabel, isSelected && styles.roleLabelSelected]}>
                         {option}
                       </Text>
                     </Pressable>
@@ -129,28 +110,24 @@ export default function CreateUserScreen() {
               </View>
             </View>
 
-            <View className="gap-1.5">
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                Full name
-              </Text>
-              <View className="flex-row items-center rounded-xl border border-slate-200 px-3.5 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50">
-                <Ionicons name="person-outline" size={18} color="#64748b" />
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Full name</Text>
+              <View style={styles.inputRow}>
+                <Ionicons name="person-outline" size={18} color={COLORS.textSecondary} />
                 <TextInput
                   value={fullName}
                   onChangeText={setFullName}
                   placeholder="Jane Doe"
-                  placeholderTextColor="#94a3b8"
-                  className="flex-1 py-3 px-2.5 text-base text-slate-900 dark:text-white"
+                  placeholderTextColor={COLORS.textMuted}
+                  style={styles.input}
                 />
               </View>
             </View>
 
-            <View className="gap-1.5">
-              <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                Email address
-              </Text>
-              <View className="flex-row items-center rounded-xl border border-slate-200 px-3.5 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50">
-                <Ionicons name="mail-outline" size={18} color="#64748b" />
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Email address</Text>
+              <View style={styles.inputRow}>
+                <Ionicons name="mail-outline" size={18} color={COLORS.textSecondary} />
                 <TextInput
                   value={email}
                   onChangeText={setEmail}
@@ -158,47 +135,41 @@ export default function CreateUserScreen() {
                   autoComplete="email"
                   keyboardType="email-address"
                   placeholder="jane@university.edu"
-                  placeholderTextColor="#94a3b8"
-                  className="flex-1 py-3 px-2.5 text-base text-slate-900 dark:text-white"
+                  placeholderTextColor={COLORS.textMuted}
+                  style={styles.input}
                 />
               </View>
             </View>
 
-            <View className="gap-1.5">
-              <View className="flex-row items-center justify-between">
-                <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  Temporary password
-                </Text>
-                <Pressable
-                  onPress={() => setPassword(generateTempPassword())}
-                  className="flex-row items-center gap-1"
-                >
-                  <Ionicons name="refresh-outline" size={14} color="#2563eb" />
-                  <Text className="text-xs font-semibold text-blue-600">Regenerate</Text>
+            <View style={styles.field}>
+              <View style={styles.passwordHeader}>
+                <Text style={styles.fieldLabel}>Temporary password</Text>
+                <Pressable onPress={() => setPassword(generateTempPassword())} style={styles.regenerate}>
+                  <Ionicons name="refresh-outline" size={14} color={COLORS.primary} />
+                  <Text style={styles.regenerateLabel}>Regenerate</Text>
                 </Pressable>
               </View>
-              <View className="flex-row items-center rounded-xl border border-slate-200 px-3.5 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-800/50">
-                <Ionicons name="key-outline" size={18} color="#64748b" />
+              <View style={styles.inputRow}>
+                <Ionicons name="key-outline" size={18} color={COLORS.textSecondary} />
                 <TextInput
                   value={password}
                   onChangeText={setPassword}
                   autoCapitalize="none"
                   placeholder="Password"
-                  placeholderTextColor="#94a3b8"
-                  className="flex-1 py-3 px-2.5 text-base text-slate-900 dark:text-white"
+                  placeholderTextColor={COLORS.textMuted}
+                  style={styles.input}
                 />
               </View>
-              <Text className="text-xs text-slate-400 dark:text-slate-500">
-                At least 8 characters. Share credentials securely with {role === "student" ? "the student" : "the lecturer"}.
+              <Text style={styles.hint}>
+                At least 8 characters. Share credentials securely with{" "}
+                {role === "student" ? "the student" : "the lecturer"}.
               </Text>
             </View>
 
             {error ? (
-              <View className="flex-row items-center gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950/50 border border-red-200 dark:border-red-800">
-                <Ionicons name="alert-circle-outline" size={18} color="#dc2626" />
-                <Text className="flex-1 text-xs font-medium text-red-600 dark:text-red-400">
-                  {error}
-                </Text>
+              <View style={styles.errorBox}>
+                <Ionicons name="alert-circle-outline" size={18} color={COLORS.danger} />
+                <Text style={styles.errorText}>{error}</Text>
               </View>
             ) : null}
 
@@ -215,3 +186,56 @@ export default function CreateUserScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+  flex: { flex: 1 },
+  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+  header: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  card: { gap: SPACING.lg },
+  field: { gap: 6 },
+  fieldLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textPrimary },
+  roleRow: { flexDirection: "row", gap: SPACING.sm },
+  roleOption: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.md,
+  },
+  roleOptionSelected: { borderColor: COLORS.primary, backgroundColor: COLORS.primaryLight },
+  roleLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textSecondary, textTransform: "capitalize" },
+  roleLabelSelected: { color: COLORS.primary },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.md,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: SPACING.md,
+    backgroundColor: COLORS.mutedLight,
+  },
+  input: { flex: 1, paddingVertical: SPACING.md, fontSize: FONT_SIZE.lg, color: COLORS.textPrimary },
+  passwordHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  regenerate: { flexDirection: "row", alignItems: "center", gap: 4 },
+  regenerateLabel: { fontSize: FONT_SIZE.xs, fontWeight: "600", color: COLORS.primary },
+  hint: { fontSize: FONT_SIZE.xs, color: COLORS.textMuted },
+  errorBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    backgroundColor: COLORS.dangerLight,
+    borderWidth: 1,
+    borderColor: COLORS.dangerBorder,
+  },
+  errorText: { flex: 1, fontSize: FONT_SIZE.xs, fontWeight: "500", color: COLORS.danger },
+});

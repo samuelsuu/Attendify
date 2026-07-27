@@ -1,30 +1,29 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-import { RoleBadge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { formatDate, formatTime } from "@/lib/date";
 import type { AttendanceWithProfile } from "@/types/database";
 
 export function AttendanceListItem({ record }: { record: AttendanceWithProfile }) {
   return (
-    <Card className="mb-3 flex-row items-center gap-3">
+    <Card style={styles.card}>
       <View>
         <Avatar
           uri={record.profile?.avatar_url}
           name={record.profile?.full_name ?? "?"}
           size={40}
         />
-        <View className="absolute -bottom-1 -right-1 h-4 w-4 items-center justify-center rounded-full bg-emerald-500 border-2 border-white dark:border-slate-800">
-          <Ionicons name="checkmark" size={9} color="#ffffff" />
+        <View style={styles.badge}>
+          <Ionicons name="checkmark" size={9} color={COLORS.white} />
         </View>
       </View>
-      <View className="flex-1 gap-1">
-        <Text className="font-semibold text-slate-900 dark:text-white">
-          {record.profile?.full_name ?? "Unknown user"}
-        </Text>
-        <Text className="text-xs text-slate-500 dark:text-slate-400">
+      <View style={styles.info}>
+        <Text style={styles.name}>{record.profile?.full_name ?? "Unknown user"}</Text>
+        <Text style={styles.meta}>
           {formatDate(record.date)} · {formatTime(record.recorded_at)}
         </Text>
       </View>
@@ -32,3 +31,23 @@ export function AttendanceListItem({ record }: { record: AttendanceWithProfile }
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  card: { marginBottom: SPACING.md, flexDirection: "row", alignItems: "center", gap: SPACING.md },
+  badge: {
+    position: "absolute",
+    bottom: -2,
+    right: -2,
+    height: 16,
+    width: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    backgroundColor: COLORS.accentGreen,
+    borderWidth: 2,
+    borderColor: COLORS.white,
+  },
+  info: { flex: 1, gap: 4 },
+  name: { fontWeight: "600", color: COLORS.textPrimary, fontSize: FONT_SIZE.md },
+  meta: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+});

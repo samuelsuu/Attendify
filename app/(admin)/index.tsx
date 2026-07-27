@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Alert, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Card } from "@/components/ui/card";
-import { useAuth } from "@/hooks/use-auth";
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useTodayCount } from "@/hooks/use-attendance";
+import { useAuth } from "@/hooks/use-auth";
 import { useLecturers, useStudents } from "@/hooks/use-profile";
 
 function StatCard({
@@ -18,14 +19,12 @@ function StatCard({
   value: number | undefined;
 }) {
   return (
-    <Card className="flex-1 gap-2">
-      <View className="h-9 w-9 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/40">
-        <Ionicons name={icon} size={18} color="#2563eb" />
+    <Card style={styles.statCard}>
+      <View style={styles.statIcon}>
+        <Ionicons name={icon} size={18} color={COLORS.primary} />
       </View>
-      <Text className="text-2xl font-bold text-slate-900 dark:text-white">
-        {value ?? "–"}
-      </Text>
-      <Text className="text-xs text-slate-500 dark:text-slate-400">{label}</Text>
+      <Text style={styles.statValue}>{value ?? "–"}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
     </Card>
   );
 }
@@ -40,12 +39,9 @@ function QuickLink({
   onPress: () => void;
 }) {
   return (
-    <Pressable
-      onPress={onPress}
-      className="flex-1 items-center gap-2 rounded-2xl bg-blue-600 px-4 py-5 active:bg-blue-700"
-    >
-      <Ionicons name={icon} size={22} color="#ffffff" />
-      <Text className="text-sm font-semibold text-white">{label}</Text>
+    <Pressable onPress={onPress} style={styles.quickLink}>
+      <Ionicons name={icon} size={22} color={COLORS.white} />
+      <Text style={styles.quickLinkLabel}>{label}</Text>
     </Pressable>
   );
 }
@@ -74,40 +70,32 @@ export default function AdminDashboardScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
+    <SafeAreaView style={styles.screen} edges={["top"]}>
       <ScrollView
-        contentContainerStyle={{ padding: 20, gap: 20 }}
+        contentContainerStyle={styles.scrollContent}
         refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetchAll} tintColor="#2563eb" />
+          <RefreshControl refreshing={isRefetching} onRefresh={refetchAll} tintColor={COLORS.primary} />
         }
       >
-        <View className="flex-row items-start justify-between">
-          <View className="gap-1">
-            <Text className="text-sm text-slate-500 dark:text-slate-400">Welcome,</Text>
-            <Text className="text-2xl font-bold text-slate-900 dark:text-white">
-              {profile?.full_name}
-            </Text>
+        <View style={styles.headerRow}>
+          <View style={styles.headerText}>
+            <Text style={styles.welcomeLabel}>Welcome,</Text>
+            <Text style={styles.welcomeName}>{profile?.full_name}</Text>
           </View>
-          <Pressable
-            onPress={confirmSignOut}
-            hitSlop={12}
-            className="h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-slate-800"
-          >
-            <Ionicons name="log-out-outline" size={20} color="#dc2626" />
+          <Pressable onPress={confirmSignOut} hitSlop={12} style={styles.signOutButton}>
+            <Ionicons name="log-out-outline" size={20} color={COLORS.danger} />
           </Pressable>
         </View>
 
-        <View className="flex-row gap-3">
+        <View style={styles.statsRow}>
           <StatCard icon="checkmark-done" label="Present today" value={todayCount.data} />
           <StatCard icon="school" label="Students" value={students.data?.length} />
           <StatCard icon="briefcase" label="Lecturers" value={lecturers.data?.length} />
         </View>
 
-        <View className="gap-3">
-          <Text className="text-base font-semibold text-slate-900 dark:text-white">
-            Quick actions
-          </Text>
-          <View className="flex-row gap-3">
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Quick actions</Text>
+          <View style={styles.quickLinksRow}>
             <QuickLink
               icon="qr-code-outline"
               label="Scan QR"
@@ -125,34 +113,49 @@ export default function AdminDashboardScreen() {
             />
           </View>
         </View>
-
-        {/* <View className="gap-3">
-          <Text className="text-base font-semibold text-slate-900 dark:text-white">
-            System & Help
-          </Text>
-          <Card className="flex-row items-center justify-between py-4 px-4">
-            <View className="flex-row items-center gap-3">
-              <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/40">
-                <Ionicons name="sparkles-outline" size={20} color="#2563eb" />
-              </View>
-              <View>
-                <Text className="text-sm font-semibold text-slate-900 dark:text-white">
-                  App Overview Tour
-                </Text>
-                <Text className="text-xs text-slate-500 dark:text-slate-400">
-                  Replay onboarding slides and guide
-                </Text>
-              </View>
-            </View>
-            <Pressable
-              onPress={() => router.push("/onboarding")}
-              className="rounded-xl bg-blue-600 px-3.5 py-2 active:bg-blue-700"
-            >
-              <Text className="text-xs font-bold text-white">Replay</Text>
-            </Pressable>
-          </Card>
-        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+  headerRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
+  headerText: { gap: 4 },
+  welcomeLabel: { fontSize: FONT_SIZE.md, color: COLORS.textSecondary },
+  welcomeName: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  signOutButton: {
+    height: 40,
+    width: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    backgroundColor: COLORS.white,
+  },
+  statsRow: { flexDirection: "row", gap: SPACING.md },
+  statCard: { flex: 1, gap: SPACING.sm },
+  statIcon: {
+    height: 36,
+    width: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 18,
+    backgroundColor: COLORS.primaryLight,
+  },
+  statValue: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+  statLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+  section: { gap: SPACING.md },
+  sectionTitle: { fontSize: FONT_SIZE.lg, fontWeight: "600", color: COLORS.textPrimary },
+  quickLinksRow: { flexDirection: "row", gap: SPACING.md },
+  quickLink: {
+    flex: 1,
+    alignItems: "center",
+    gap: SPACING.sm,
+    borderRadius: RADIUS.xl,
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.lg,
+  },
+  quickLinkLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.white },
+});

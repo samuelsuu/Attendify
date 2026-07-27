@@ -1,19 +1,21 @@
-import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
+  Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useOnboarding } from "@/hooks/use-onboarding";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -21,69 +23,35 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 type Slide = {
   id: string;
   title: string;
-  subtitle: string;
   description: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  badge: string;
-  highlights: { icon: keyof typeof Ionicons.glyphMap; text: string }[];
+  image: number;
 };
 
 const SLIDES: Slide[] = [
   {
     id: "welcome",
-    title: "Welcome to Attendify",
-    subtitle: "Effortless & Intelligent Tracking",
-    description:
-      "A modern solution designed for universities, schools, and organizations to handle attendance with total precision.",
-    icon: "school-outline",
-    badge: "Smart Platform",
-    highlights: [
-      { icon: "flash-outline", text: "Instant records" },
-      { icon: "shield-checkmark-outline", text: "Verified users" },
-      { icon: "sync-outline", text: "Real-time sync" },
-    ],
+    title: "Welcome to Webcapz",
+    description: "A simple way for universities to track attendance with total precision.",
+    image: require("@/assets/images/onboarding/welcome.png"),
   },
   {
     id: "qr-scanning",
-    title: "Dynamic QR Code Check-in",
-    subtitle: "Scan & Verify in Seconds",
+    title: "Scan & Check In",
     description:
-      "Students present their unique personal QR code, and lecturers or admins scan it instantly to record attendance.",
-    icon: "qr-code-outline",
-    badge: "Contactless",
-    highlights: [
-      { icon: "scan-outline", text: "High-speed scanner" },
-      { icon: "lock-closed-outline", text: "Secure tokens" },
-      { icon: "checkmark-circle-outline", text: "Duplicate detection" },
-    ],
+      "Every student and lecturer gets a personal QR code. An admin or lecturer scans it to record attendance instantly.",
+    image: require("@/assets/images/onboarding/qr-scanning.png"),
   },
   {
     id: "analytics",
-    title: "Live Attendance Insights",
-    subtitle: "Comprehensive History & Stats",
-    description:
-      "Monitor daily presence counts, search student history, and inspect detailed records with zero hassle.",
-    icon: "bar-chart-outline",
-    badge: "Real-time Data",
-    highlights: [
-      { icon: "time-outline", text: "Full audit log" },
-      { icon: "filter-outline", text: "Smart search & filter" },
-      { icon: "trending-up-outline", text: "Presence metrics" },
-    ],
+    title: "Full Attendance History",
+    description: "See daily presence counts and a complete, searchable attendance record.",
+    image: require("@/assets/images/onboarding/analytics.png"),
   },
   {
     id: "roles",
-    title: "Role-Based Access",
-    subtitle: "Admin, Lecturer & Student Workflows",
-    description:
-      "Tailored experiences for everyone. Admins manage accounts & scanners, while students view personal check-ins.",
-    icon: "people-outline",
-    badge: "Multi-Role",
-    highlights: [
-      { icon: "person-add-outline", text: "Quick user creation" },
-      { icon: "key-outline", text: "Authentication" },
-      { icon: "sparkles-outline", text: "Intuitive UI" },
-    ],
+    title: "Built for Every Role",
+    description: "Admins manage accounts and scan QR codes, while students and lecturers track their own check-ins.",
+    image: require("@/assets/images/onboarding/roles.png"),
   },
 ];
 
@@ -115,10 +83,7 @@ export default function OnboardingScreen() {
   function handleNext() {
     if (currentIndex < SLIDES.length - 1) {
       triggerHaptic();
-      flatListRef.current?.scrollToIndex({
-        index: currentIndex + 1,
-        animated: true,
-      });
+      flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
     } else {
       handleFinish();
     }
@@ -127,39 +92,21 @@ export default function OnboardingScreen() {
   function handleBack() {
     if (currentIndex > 0) {
       triggerHaptic();
-      flatListRef.current?.scrollToIndex({
-        index: currentIndex - 1,
-        animated: true,
-      });
+      flatListRef.current?.scrollToIndex({ index: currentIndex - 1, animated: true });
     }
   }
 
   const isLastSlide = currentIndex === SLIDES.length - 1;
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-900">
-      {/* Top Header */}
-      <View className="flex-row items-center justify-between px-6 pt-3 pb-2">
-        <View className="flex-row items-center gap-2">
-          <View className="h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-            <Ionicons name="school" size={18} color="#ffffff" />
-          </View>
-          <Text className="text-sm font-bold tracking-wider text-slate-200">
-            ATTENDIFY
-          </Text>
-        </View>
-
-        <Pressable
-          onPress={handleFinish}
-          hitSlop={12}
-          className="flex-row items-center gap-1 rounded-full bg-slate-800/80 px-3.5 py-1.5 active:bg-slate-700"
-        >
-          <Text className="text-xs font-semibold text-slate-300">Skip</Text>
-          <Ionicons name="chevron-forward" size={14} color="#94a3b8" />
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.topBar}>
+        <Text style={styles.brand}>WEBCAPZ</Text>
+        <Pressable onPress={handleFinish} hitSlop={12} style={styles.skipButton}>
+          <Text style={styles.skipText}>Skip</Text>
         </Pressable>
       </View>
 
-      {/* Main Slides Carousel */}
       <FlatList
         ref={flatListRef}
         data={SLIDES}
@@ -170,106 +117,95 @@ export default function OnboardingScreen() {
         onScroll={handleScroll}
         scrollEventThrottle={16}
         renderItem={({ item }) => (
-          <View
-            style={{ width: SCREEN_WIDTH }}
-            className="flex-1 justify-between px-8 py-6"
-          >
-            {/* Upper Graphic Container */}
-            <View className="items-center justify-center py-6">
-              <View className="relative items-center justify-center">
-                {/* Glow Background Rgb */}
-                <View className="h-44 w-44 rounded-full bg-blue-600/20" />
-                <View className="absolute h-36 w-36 items-center justify-center rounded-3xl bg-blue-600/30 border border-blue-400/30 shadow-2xl">
-                  <View className="h-28 w-28 items-center justify-center rounded-2xl bg-blue-600 shadow-lg">
-                    <Ionicons name={item.icon} size={54} color="#ffffff" />
-                  </View>
-                </View>
-              </View>
-
-              <View className="mt-6 rounded-full bg-blue-500/10 px-3.5 py-1 border border-blue-500/20">
-                <Text className="text-xs font-semibold text-blue-400">
-                  {item.badge}
-                </Text>
-              </View>
-            </View>
-
-            {/* Slide Content */}
-            <Animated.View entering={FadeInDown.duration(400)} className="gap-3">
-              <Text className="text-xs font-bold uppercase tracking-widest text-blue-400">
-                {item.subtitle}
-              </Text>
-              <Text className="text-3xl font-extrabold text-white leading-tight">
-                {item.title}
-              </Text>
-              <Text className="text-base text-slate-400 leading-relaxed">
-                {item.description}
-              </Text>
-
-              {/* Highlights Chips */}
-              <View className="mt-2 flex-row flex-wrap gap-2">
-                {item.highlights.map((h, i) => (
-                  <View
-                    key={i}
-                    className="flex-row items-center gap-1.5 rounded-xl bg-slate-800/80 px-3 py-2 border border-slate-700/50"
-                  >
-                    <Ionicons name={h.icon} size={14} color="#60a5fa" />
-                    <Text className="text-xs font-medium text-slate-200">
-                      {h.text}
-                    </Text>
-                  </View>
-                ))}
-              </View>
+          <View style={[styles.slide, { width: SCREEN_WIDTH }]}>
+            <Image source={item.image} style={styles.image} resizeMode="cover" />
+            <Animated.View entering={FadeInDown.duration(400)} style={styles.textBlock}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.description}>{item.description}</Text>
             </Animated.View>
           </View>
         )}
       />
 
-      {/* Bottom Controls */}
-      <View className="gap-6 px-8 pb-8 pt-2">
-        {/* Step Indicator Dots */}
-        <View className="flex-row items-center justify-center gap-2">
-          {SLIDES.map((_, i) => {
-            const isActive = i === currentIndex;
-            return (
-              <View
-                key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  isActive ? "w-8 bg-blue-500" : "w-2 bg-slate-700"
-                }`}
-              />
-            );
-          })}
+      <View style={styles.bottomControls}>
+        <View style={styles.dots}>
+          {SLIDES.map((_, i) => (
+            <View key={i} style={[styles.dot, i === currentIndex && styles.dotActive]} />
+          ))}
         </View>
 
-        {/* Action Buttons Row */}
-        <View className="flex-row items-center justify-between gap-4">
+        <View style={styles.actionsRow}>
           {currentIndex > 0 ? (
-            <Pressable
-              onPress={handleBack}
-              className="flex-row items-center gap-2 rounded-2xl bg-slate-800 px-5 py-4 active:bg-slate-700 border border-slate-700"
-            >
-              <Ionicons name="arrow-back" size={18} color="#94a3b8" />
-              <Text className="text-sm font-semibold text-slate-300">Back</Text>
+            <Pressable onPress={handleBack} style={styles.backButton}>
+              <Text style={styles.backButtonText}>Back</Text>
             </Pressable>
           ) : (
-            <View className="flex-1" />
+            <View style={styles.flex} />
           )}
 
-          <Pressable
-            onPress={handleNext}
-            className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 py-4 active:bg-blue-700 shadow-lg shadow-blue-600/40"
-          >
-            <Text className="text-base font-bold text-white">
-              {isLastSlide ? "Get Started" : "Next"}
-            </Text>
-            <Ionicons
-              name={isLastSlide ? "checkmark-circle" : "arrow-forward"}
-              size={20}
-              color="#ffffff"
-            />
+          <Pressable onPress={handleNext} style={styles.nextButton}>
+            <Text style={styles.nextButtonText}>{isLastSlide ? "Get Started" : "Next"}</Text>
           </Pressable>
         </View>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: COLORS.background },
+  flex: { flex: 1 },
+  topBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: SPACING.xl,
+    paddingTop: SPACING.sm,
+    paddingBottom: SPACING.sm,
+  },
+  brand: { fontSize: FONT_SIZE.sm, fontWeight: "700", letterSpacing: 1.5, color: COLORS.primaryDark },
+  skipButton: {
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: 6,
+    backgroundColor: COLORS.mutedLight,
+  },
+  skipText: { fontSize: FONT_SIZE.xs, fontWeight: "600", color: COLORS.textSecondary },
+  slide: { flex: 1, alignItems: "center", paddingHorizontal: SPACING.xxl, paddingTop: SPACING.lg },
+  image: {
+    width: "100%",
+    height: 280,
+    borderRadius: RADIUS.xxl,
+    backgroundColor: COLORS.mutedLight,
+  },
+  textBlock: { marginTop: SPACING.xxl, gap: SPACING.sm, alignItems: "center" },
+  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "800", color: COLORS.textPrimary, textAlign: "center" },
+  description: {
+    fontSize: FONT_SIZE.lg,
+    color: COLORS.textSecondary,
+    textAlign: "center",
+    lineHeight: 22,
+  },
+  bottomControls: { gap: SPACING.xl, paddingHorizontal: SPACING.xxl, paddingBottom: SPACING.xxl, paddingTop: SPACING.sm },
+  dots: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: SPACING.sm },
+  dot: { height: 8, width: 8, borderRadius: 4, backgroundColor: COLORS.muted },
+  dotActive: { width: 24, backgroundColor: COLORS.primary },
+  actionsRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+  backButton: {
+    borderRadius: RADIUS.xl,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.md,
+  },
+  backButtonText: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textSecondary },
+  nextButton: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: RADIUS.xl,
+    backgroundColor: COLORS.primary,
+    paddingVertical: SPACING.md,
+  },
+  nextButtonText: { fontSize: FONT_SIZE.lg, fontWeight: "700", color: COLORS.white },
+});

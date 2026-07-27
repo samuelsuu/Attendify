@@ -1,4 +1,4 @@
-# Attendify
+# Webcapz
 
 A smart attendance management app built with Expo Router, NativeWind, Supabase, and React Query. Three roles — **Admin**, **Student**, **Lecturer** — each with their own experience behind Supabase-authenticated, role-gated routes.
 

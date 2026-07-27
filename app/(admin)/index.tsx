@@ -4,8 +4,8 @@ import { Alert, Pressable, RefreshControl, ScrollView, Text, View } from "react-
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Card } from "@/components/ui/card";
-import { useAuth } from "@/hooks/use-auth";
 import { useTodayCount } from "@/hooks/use-attendance";
+import { useAuth } from "@/hooks/use-auth";
 import { useLecturers, useStudents } from "@/hooks/use-profile";
 
 function StatCard({
@@ -19,8 +19,8 @@ function StatCard({
 }) {
   return (
     <Card className="flex-1 gap-2">
-      <View className="h-9 w-9 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/40">
-        <Ionicons name={icon} size={18} color="#2563eb" />
+      <View className="h-9 w-9 items-center justify-center rounded-full bg-[#B8BCC2]/20 dark:bg-blue-900/40">
+        <Ionicons name={icon} size={18} color="#1C7FC4" />
       </View>
       <Text className="text-2xl font-bold text-slate-900 dark:text-white">
         {value ?? "–"}
@@ -42,7 +42,7 @@ function QuickLink({
   return (
     <Pressable
       onPress={onPress}
-      className="flex-1 items-center gap-2 rounded-2xl bg-blue-600 px-4 py-5 active:bg-blue-700"
+      className="flex-1 items-center gap-2 rounded-2xl bg-[#1C7FC4] px-4 py-5 active:bg-[#0B3D63]"
     >
       <Ionicons name={icon} size={22} color="#ffffff" />
       <Text className="text-sm font-semibold text-white">{label}</Text>
@@ -78,7 +78,7 @@ export default function AdminDashboardScreen() {
       <ScrollView
         contentContainerStyle={{ padding: 20, gap: 20 }}
         refreshControl={
-          <RefreshControl refreshing={isRefetching} onRefresh={refetchAll} tintColor="#2563eb" />
+          <RefreshControl refreshing={isRefetching} onRefresh={refetchAll} tintColor="#1C7FC4" />
         }
       >
         <View className="flex-row items-start justify-between">
@@ -91,7 +91,7 @@ export default function AdminDashboardScreen() {
           <Pressable
             onPress={confirmSignOut}
             hitSlop={12}
-            className="h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-slate-800"
+            className="h-10 w-10 items-center justify-center rounded-full bg-[#FFF] dark:bg-slate-800"
           >
             <Ionicons name="log-out-outline" size={20} color="#dc2626" />
           </Pressable>

@@ -45,7 +45,7 @@ export function AvatarPicker({ uri, name, size = 96, loading, onPick }: AvatarPi
         <ActivityIndicator color="#ffffff" />
       </View>
       <View
-        className="absolute bottom-0 right-0 h-8 w-8 items-center justify-center rounded-full bg-blue-600 border-2 border-white dark:border-slate-900"
+        className="absolute bottom-0 right-0 h-8 w-8 items-center justify-center rounded-full bg-[#1C7FC4] border-2 border-[#FFF] dark:border-slate-900"
         pointerEvents="none"
       >
         <Ionicons name="camera" size={16} color="#ffffff" />

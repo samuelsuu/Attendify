@@ -22,24 +22,24 @@ type ButtonProps = {
 };
 
 const VARIANT_CLASSES: Record<NonNullable<ButtonProps["variant"]>, string> = {
-  primary: "bg-blue-600 active:bg-blue-700",
-  secondary: "bg-slate-100 active:bg-slate-200 dark:bg-slate-700 dark:active:bg-slate-600",
+  primary: "bg-[#1C7FC4] active:bg-[#0B3D63]",
+  secondary: "bg-[#B8BCC2]/30 active:bg-[#B8BCC2]/50 dark:bg-slate-700 dark:active:bg-slate-600",
   danger: "bg-red-600 active:bg-red-700",
   outline: "border border-slate-300 dark:border-slate-700 bg-transparent active:bg-slate-100 dark:active:bg-slate-800",
 };
 
 const VARIANT_TEXT_CLASSES: Record<NonNullable<ButtonProps["variant"]>, string> = {
-  primary: "text-white",
-  secondary: "text-slate-900 dark:text-white",
+  primary: "text-[#FFF]",
+  secondary: "text-[#0B3D63] dark:text-white",
   danger: "text-white",
   outline: "text-slate-700 dark:text-slate-200",
 };
 
 const VARIANT_ICON_COLORS: Record<NonNullable<ButtonProps["variant"]>, string> = {
-  primary: "#ffffff",
-  secondary: "#0f172a",
+  primary: "#FFF",
+  secondary: "#0B3D63",
   danger: "#ffffff",
-  outline: "#2563eb",
+  outline: "#1C7FC4",
 };
 
 export function Button({

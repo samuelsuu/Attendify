@@ -14,11 +14,11 @@ export default function MemberTabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#2563eb",
+        tabBarActiveTintColor: "#1C7FC4",
         tabBarInactiveTintColor: isDark ? "#64748b" : "#94a3b8",
         tabBarStyle: {
-          backgroundColor: isDark ? "#0f172a" : "#ffffff",
-          borderTopColor: isDark ? "#1e293b" : "#e2e8f0",
+          backgroundColor: isDark ? "#0B3D63" : "#FFF",
+          borderTopColor: isDark ? "#1e293b" : "#B8BCC2",
         },
       }}
     >

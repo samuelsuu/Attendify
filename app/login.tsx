@@ -10,8 +10,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
@@ -38,7 +38,7 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-blue-600 dark:bg-slate-950">
+    <SafeAreaView className="flex-1 bg-[#0B3D63] dark:bg-slate-950">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         className="flex-1"
@@ -56,16 +56,16 @@ export default function LoginScreen() {
                 <Ionicons name="school" size={34} color="#ffffff" />
               </View>
               <Text className="text-3xl font-extrabold text-white tracking-tight">
-                Attendify
+                Webcapz
               </Text>
-              <Text className="text-sm font-medium text-blue-100">
+              <Text className="text-sm font-medium text-[#B8BCC2]">
                 Sign in to your account
               </Text>
             </Animated.View>
 
             <Animated.View
               entering={FadeInDown.delay(100).duration(400)}
-              className="gap-4 rounded-3xl bg-white p-6 shadow-xl dark:bg-slate-900"
+              className="gap-4 rounded-3xl bg-[#FFF] p-6 shadow-xl dark:bg-slate-900"
             >
               <View className="gap-1.5">
                 <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -136,8 +136,8 @@ export default function LoginScreen() {
                 onPress={() => router.push("/onboarding")}
                 className="mt-2 flex-row items-center justify-center gap-1.5 py-1"
               >
-                <Ionicons name="sparkles-outline" size={16} color="#2563eb" />
-                <Text className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                <Ionicons name="sparkles-outline" size={16} color="#1C7FC4" />
+                <Text className="text-xs font-semibold text-[#1C7FC4] dark:text-[#B8BCC2]">
                   View App Tour & Onboarding
                 </Text>
               </Pressable>

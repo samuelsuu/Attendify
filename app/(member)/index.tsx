@@ -1,14 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { RoleBadge } from "@/components/ui/badge";
+import { QrCodeCard } from "@/components/qr-code-card";
 import { Avatar } from "@/components/ui/avatar";
+import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { QrCodeCard } from "@/components/qr-code-card";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function MemberHomeScreen() {
@@ -20,13 +20,13 @@ export default function MemberHomeScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-[#FFF] dark:bg-slate-950" edges={["top"]}>
       <ScrollView contentContainerStyle={{ padding: 20, gap: 20 }}>
         <Animated.View entering={FadeInDown.duration(400)} className="flex-row items-center gap-3.5">
           <Avatar uri={profile.avatar_url} name={profile.full_name} size={52} />
           <View className="flex-1 gap-2">
             <View className="flex-row items-center gap-1.5">
-              <Ionicons name="sparkles-outline" size={16} color="#2563eb" />
+              <Ionicons name="sparkles-outline" size={16} color="#1C7FC4" />
               <Text className="text-sm font-medium text-slate-500 dark:text-slate-400">
                 Welcome back,
               </Text>
@@ -42,15 +42,15 @@ export default function MemberHomeScreen() {
 
         {/* Quick Info Card */}
         <Animated.View entering={FadeInDown.delay(50).duration(400)}>
-          <Card className="flex-row items-center gap-3.5 bg-blue-50/70 border border-blue-200/60 dark:bg-blue-950/30 dark:border-blue-900/50">
-            <View className="h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
+          <Card className="flex-row items-center gap-3.5 bg-[#B8BCC2]/20 border border-[#B8BCC2]/40 dark:bg-blue-950/30 dark:border-blue-900/50">
+            <View className="h-10 w-10 items-center justify-center rounded-xl bg-[#1C7FC4]">
               <Ionicons name="scan-outline" size={22} color="#ffffff" />
             </View>
             <View className="flex-1">
-              <Text className="text-sm font-bold text-blue-950 dark:text-blue-200">
+              <Text className="text-sm font-bold text-[#0B3D63] dark:text-blue-200">
                 Attendance Ready
               </Text>
-              <Text className="text-xs text-blue-800/80 dark:text-blue-300/80">
+              <Text className="text-xs text-[#0B3D63]/80 dark:text-blue-300/80">
                 Show your personal QR pass to record presence
               </Text>
             </View>

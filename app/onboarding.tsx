@@ -11,8 +11,8 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useOnboarding } from "@/hooks/use-onboarding";
 
@@ -31,7 +31,7 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     id: "welcome",
-    title: "Welcome to Attendify",
+    title: "Welcome to Webcapz Technologies",
     subtitle: "Effortless & Intelligent Tracking",
     description:
       "A modern solution designed for universities, schools, and organizations to handle attendance with total precision.",
@@ -94,7 +94,7 @@ export default function OnboardingScreen() {
   const flatListRef = useRef<FlatList<Slide>>(null);
 
   function triggerHaptic() {
-    Haptics.selectionAsync().catch(() => {});
+    Haptics.selectionAsync().catch(() => { });
   }
 
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -137,25 +137,25 @@ export default function OnboardingScreen() {
   const isLastSlide = currentIndex === SLIDES.length - 1;
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-900">
+    <SafeAreaView className="flex-1 bg-[#0B3D63]">
       {/* Top Header */}
       <View className="flex-row items-center justify-between px-6 pt-3 pb-2">
         <View className="flex-row items-center gap-2">
-          <View className="h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+          <View className="h-8 w-8 items-center justify-center rounded-lg bg-[#1C7FC4]">
             <Ionicons name="school" size={18} color="#ffffff" />
           </View>
-          <Text className="text-sm font-bold tracking-wider text-slate-200">
-            ATTENDIFY
+          <Text className="text-sm font-bold tracking-wider text-[#FFF]">
+            Webcapz
           </Text>
         </View>
 
         <Pressable
           onPress={handleFinish}
           hitSlop={12}
-          className="flex-row items-center gap-1 rounded-full bg-slate-800/80 px-3.5 py-1.5 active:bg-slate-700"
+          className="flex-row items-center gap-1 rounded-full bg-[#FFF]/15 px-3.5 py-1.5 active:bg-[#FFF]/25"
         >
-          <Text className="text-xs font-semibold text-slate-300">Skip</Text>
-          <Ionicons name="chevron-forward" size={14} color="#94a3b8" />
+          <Text className="text-xs font-semibold text-[#FFF]">Skip</Text>
+          <Ionicons name="chevron-forward" size={14} color="#B8BCC2" />
         </Pressable>
       </View>
 
@@ -178,16 +178,16 @@ export default function OnboardingScreen() {
             <View className="items-center justify-center py-6">
               <View className="relative items-center justify-center">
                 {/* Glow Background Rgb */}
-                <View className="h-44 w-44 rounded-full bg-blue-600/20" />
-                <View className="absolute h-36 w-36 items-center justify-center rounded-3xl bg-blue-600/30 border border-blue-400/30 shadow-2xl">
-                  <View className="h-28 w-28 items-center justify-center rounded-2xl bg-blue-600 shadow-lg">
+                <View className="h-44 w-44 rounded-full bg-[#1C7FC4]/20" />
+                <View className="absolute h-36 w-36 items-center justify-center rounded-3xl bg-[#1C7FC4]/30 border border-[#B8BCC2]/30 shadow-2xl">
+                  <View className="h-28 w-28 items-center justify-center rounded-2xl bg-[#1C7FC4] shadow-lg">
                     <Ionicons name={item.icon} size={54} color="#ffffff" />
                   </View>
                 </View>
               </View>
 
-              <View className="mt-6 rounded-full bg-blue-500/10 px-3.5 py-1 border border-blue-500/20">
-                <Text className="text-xs font-semibold text-blue-400">
+              <View className="mt-6 rounded-full bg-[#B8BCC2]/20 px-3.5 py-1 border border-[#B8BCC2]/30">
+                <Text className="text-xs font-semibold text-[#B8BCC2]">
                   {item.badge}
                 </Text>
               </View>
@@ -195,13 +195,13 @@ export default function OnboardingScreen() {
 
             {/* Slide Content */}
             <Animated.View entering={FadeInDown.duration(400)} className="gap-3">
-              <Text className="text-xs font-bold uppercase tracking-widest text-blue-400">
+              <Text className="text-xs font-bold uppercase tracking-widest text-[#B8BCC2]">
                 {item.subtitle}
               </Text>
-              <Text className="text-3xl font-extrabold text-white leading-tight">
+              <Text className="text-3xl font-extrabold text-[#FFF] leading-tight">
                 {item.title}
               </Text>
-              <Text className="text-base text-slate-400 leading-relaxed">
+              <Text className="text-base text-[#B8BCC2] leading-relaxed">
                 {item.description}
               </Text>
 
@@ -210,10 +210,10 @@ export default function OnboardingScreen() {
                 {item.highlights.map((h, i) => (
                   <View
                     key={i}
-                    className="flex-row items-center gap-1.5 rounded-xl bg-slate-800/80 px-3 py-2 border border-slate-700/50"
+                    className="flex-row items-center gap-1.5 rounded-xl bg-[#FFF]/10 px-3 py-2 border border-[#FFF]/20"
                   >
-                    <Ionicons name={h.icon} size={14} color="#60a5fa" />
-                    <Text className="text-xs font-medium text-slate-200">
+                    <Ionicons name={h.icon} size={14} color="#FFF" />
+                    <Text className="text-xs font-medium text-[#FFF]">
                       {h.text}
                     </Text>
                   </View>
@@ -233,9 +233,8 @@ export default function OnboardingScreen() {
             return (
               <View
                 key={i}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  isActive ? "w-8 bg-blue-500" : "w-2 bg-slate-700"
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 ${isActive ? "w-8 bg-[#1C7FC4]" : "w-2 bg-[#B8BCC2]"
+                  }`}
               />
             );
           })}
@@ -246,10 +245,10 @@ export default function OnboardingScreen() {
           {currentIndex > 0 ? (
             <Pressable
               onPress={handleBack}
-              className="flex-row items-center gap-2 rounded-2xl bg-slate-800 px-5 py-4 active:bg-slate-700 border border-slate-700"
+              className="flex-row items-center gap-2 rounded-2xl bg-[#FFF]/10 px-5 py-4 active:bg-[#FFF]/20 border border-[#FFF]/20"
             >
-              <Ionicons name="arrow-back" size={18} color="#94a3b8" />
-              <Text className="text-sm font-semibold text-slate-300">Back</Text>
+              <Ionicons name="arrow-back" size={18} color="#FFF" />
+              <Text className="text-sm font-semibold text-[#FFF]">Back</Text>
             </Pressable>
           ) : (
             <View className="flex-1" />
@@ -257,7 +256,7 @@ export default function OnboardingScreen() {
 
           <Pressable
             onPress={handleNext}
-            className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-blue-600 px-6 py-4 active:bg-blue-700 shadow-lg shadow-blue-600/40"
+            className="flex-1 flex-row items-center justify-center gap-2 rounded-2xl bg-[#1C7FC4] px-6 py-4 active:bg-[#0B3D63] shadow-lg shadow-[#0B3D63]/40"
           >
             <Text className="text-base font-bold text-white">
               {isLastSlide ? "Get Started" : "Next"}

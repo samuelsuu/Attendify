@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import {
   CameraView,
-  type BarcodeScanningResult,
   useCameraPermissions,
+  type BarcodeScanningResult,
 } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
@@ -10,8 +10,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/ui/button";
 import { Toast } from "@/components/ui/toast";
-import { useAuth } from "@/hooks/use-auth";
 import { useRecordAttendance } from "@/hooks/use-attendance";
+import { useAuth } from "@/hooks/use-auth";
 import { getProfileById } from "@/services/profiles";
 import type { Role } from "@/types/database";
 
@@ -93,14 +93,14 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
   }
 
   if (!permission) {
-    return <View className="flex-1 bg-slate-950" />;
+    return <View className="flex-1 bg-[#0B3D63]" />;
   }
 
   if (!permission.granted) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center gap-4 bg-slate-50 px-8 dark:bg-slate-950">
-        <View className="h-20 w-20 items-center justify-center rounded-3xl bg-blue-50 dark:bg-blue-900/30">
-          <Ionicons name="camera-outline" size={42} color="#2563eb" />
+      <SafeAreaView className="flex-1 items-center justify-center gap-4 bg-[#FFF] px-8 dark:bg-slate-950">
+        <View className="h-20 w-20 items-center justify-center rounded-3xl bg-[#B8BCC2]/20 dark:bg-blue-900/30">
+          <Ionicons name="camera-outline" size={42} color="#1C7FC4" />
         </View>
         <Text className="text-center text-xl font-bold text-slate-900 dark:text-white">
           Camera Access Needed
@@ -134,7 +134,7 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
         </View>
 
         <View className="flex-1 items-center justify-center">
-          <View className="h-64 w-64 rounded-3xl border-4 border-blue-500/80 items-center justify-center bg-blue-500/5">
+          <View className="h-64 w-64 rounded-3xl border-4 border-[#1C7FC4]/80 items-center justify-center bg-[#1C7FC4]/10">
             <Ionicons name="qr-code-outline" size={48} color="rgba(255,255,255,0.4)" />
           </View>
         </View>
@@ -148,7 +148,7 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
           ) : toastMessage ? null : scanned ? (
             <Pressable
               onPress={() => setScanned(false)}
-              className="flex-row items-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 active:bg-blue-700 shadow-lg shadow-blue-600/50"
+              className="flex-row items-center gap-2 rounded-full bg-[#1C7FC4] px-6 py-3.5 active:bg-[#0B3D63] shadow-lg shadow-[#0B3D63]/40"
             >
               <Ionicons name="refresh-outline" size={18} color="#ffffff" />
               <Text className="text-sm font-bold text-white">Scan Next Code</Text>

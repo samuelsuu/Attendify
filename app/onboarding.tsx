@@ -32,26 +32,26 @@ const SLIDES: Slide[] = [
     id: "welcome",
     title: "Welcome to Webcapz",
     description: "A simple way for universities to track attendance with total precision.",
-    image: require("@/assets/images/onboarding/welcome.png"),
+    image: require("@/assets/images/splash1.jpg"),
   },
   {
     id: "qr-scanning",
     title: "Scan & Check In",
     description:
       "Every student and lecturer gets a personal QR code. An admin or lecturer scans it to record attendance instantly.",
-    image: require("@/assets/images/onboarding/qr-scanning.png"),
+    image: require("@/assets/images/webcapzimages.jpg"),
   },
   {
     id: "analytics",
     title: "Full Attendance History",
     description: "See daily presence counts and a complete, searchable attendance record.",
-    image: require("@/assets/images/onboarding/analytics.png"),
+    image: require("@/assets/images/ONB3.png"),
   },
   {
     id: "roles",
     title: "Built for Every Role",
     description: "Admins manage accounts and scan QR codes, while students and lecturers track their own check-ins.",
-    image: require("@/assets/images/onboarding/roles.png"),
+    image: require("@/assets/images/WebCapz-image.png"),
   },
 ];
 

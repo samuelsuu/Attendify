@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useCreateAccount, useUpdateAvatar } from "@/hooks/use-admin";
+import { getErrorMessage } from "@/lib/error-message";
 import { generateTempPassword } from "@/lib/password";
 import type { Role } from "@/types/database";
 
@@ -63,7 +64,7 @@ export default function CreateUserScreen() {
         [{ text: "Done", onPress: () => router.back() }]
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to create account.");
+      setError(getErrorMessage(err));
     }
   }
 

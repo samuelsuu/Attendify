@@ -17,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/ui/button";
 import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
+import { getErrorMessage } from "@/lib/error-message";
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
@@ -33,7 +34,7 @@ export default function LoginScreen() {
     try {
       await signIn(email.trim(), password);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to sign in.");
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }

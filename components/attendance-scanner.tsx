@@ -13,6 +13,7 @@ import { Toast } from "@/components/ui/toast";
 import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useRecordAttendance } from "@/hooks/use-attendance";
 import { useAuth } from "@/hooks/use-auth";
+import { getErrorMessage } from "@/lib/error-message";
 import { getProfileById } from "@/services/profiles";
 import type { Role } from "@/types/database";
 
@@ -84,10 +85,7 @@ export function AttendanceScanner({ allowedRoles }: AttendanceScannerProps) {
         showSuccessToast(`${scannedProfile.full_name} (${scannedProfile.role}) marked present`);
       }
     } catch (err) {
-      Alert.alert(
-        "Something went wrong",
-        err instanceof Error ? err.message : "Please try again."
-      );
+      Alert.alert("Something went wrong", getErrorMessage(err));
     } finally {
       setProcessing(false);
     }

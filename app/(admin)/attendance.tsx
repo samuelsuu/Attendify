@@ -6,10 +6,11 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { useAllAttendance } from "@/hooks/use-attendance";
+import { getErrorMessage } from "@/lib/error-message";
 import type { AttendanceWithProfile } from "@/types/database";
 
 export default function AdminAttendanceScreen() {
-  const { data, isLoading, isRefetching, refetch } = useAllAttendance();
+  const { data, error, isLoading, isRefetching, refetch } = useAllAttendance();
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
@@ -28,11 +29,19 @@ export default function AdminAttendanceScreen() {
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={COLORS.primary} />
           }
           ListEmptyComponent={
-            <EmptyState
-              icon="list-outline"
-              title="No attendance recorded"
-              message="Scan a QR code to record the first attendance entry."
-            />
+            error ? (
+              <EmptyState
+                icon="alert-circle-outline"
+                title="Couldn't load attendance"
+                message={getErrorMessage(error)}
+              />
+            ) : (
+              <EmptyState
+                icon="list-outline"
+                title="No attendance recorded"
+                message="Scan a QR code to record the first attendance entry."
+              />
+            )
           }
           renderItem={({ item }) => <AttendanceListItem record={item} />}
         />

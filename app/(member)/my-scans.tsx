@@ -7,11 +7,12 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { useMyScans } from "@/hooks/use-attendance";
 import { useAuth } from "@/hooks/use-auth";
+import { getErrorMessage } from "@/lib/error-message";
 import type { AttendanceWithProfile } from "@/types/database";
 
 export default function MyScansScreen() {
   const { profile } = useAuth();
-  const { data, isLoading, isRefetching, refetch } = useMyScans(profile?.id);
+  const { data, error, isLoading, isRefetching, refetch } = useMyScans(profile?.id);
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
@@ -31,11 +32,19 @@ export default function MyScansScreen() {
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={COLORS.primary} />
           }
           ListEmptyComponent={
-            <EmptyState
-              icon="qr-code-outline"
-              title="No scans yet"
-              message="Students you scan for attendance will show up here."
-            />
+            error ? (
+              <EmptyState
+                icon="alert-circle-outline"
+                title="Couldn't load your scans"
+                message={getErrorMessage(error)}
+              />
+            ) : (
+              <EmptyState
+                icon="qr-code-outline"
+                title="No scans yet"
+                message="Students you scan for attendance will show up here."
+              />
+            )
           }
           renderItem={({ item }) => <AttendanceListItem record={item} />}
         />

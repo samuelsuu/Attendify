@@ -12,18 +12,6 @@ function looksLikeNetworkError(message: string): boolean {
   );
 }
 
-/**
- * Normalizes any thrown value into a readable message.
- *
- * Supabase query errors are real `Error` instances (PostgrestError extends
- * Error), so their `.message` is safe to show directly. But when the
- * underlying `fetch()` call itself fails — no connectivity, DNS failure,
- * request timeout — React Native/Hermes can reject with a plain object or
- * string instead of an `Error` (postgrest-js even guards for this explicitly
- * in its own source). That case has no useful message to surface, and is
- * overwhelmingly a connectivity problem in practice, so it gets a specific,
- * actionable fallback instead of a vague "something went wrong".
- */
 export function getErrorMessage(err: unknown): string {
   if (err instanceof Error) {
     return looksLikeNetworkError(err.message) ? NETWORK_ERROR_MESSAGE : err.message;

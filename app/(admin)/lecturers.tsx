@@ -8,11 +8,12 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { UserListItem } from "@/components/user-list-item";
 import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { useLecturers } from "@/hooks/use-profile";
+import { getErrorMessage } from "@/lib/error-message";
 import type { Profile } from "@/types/database";
 
 export default function LecturersScreen() {
   const router = useRouter();
-  const { data, isLoading, isRefetching, refetch } = useLecturers();
+  const { data, error, isLoading, isRefetching, refetch } = useLecturers();
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
@@ -37,11 +38,19 @@ export default function LecturersScreen() {
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={COLORS.primary} />
           }
           ListEmptyComponent={
-            <EmptyState
-              icon="briefcase-outline"
-              title="No lecturers yet"
-              message="Lecturers you create in Supabase will appear here."
-            />
+            error ? (
+              <EmptyState
+                icon="alert-circle-outline"
+                title="Couldn't load lecturers"
+                message={getErrorMessage(error)}
+              />
+            ) : (
+              <EmptyState
+                icon="briefcase-outline"
+                title="No lecturers yet"
+                message="Lecturers you create in Supabase will appear here."
+              />
+            )
           }
           renderItem={({ item }) => (
             <UserListItem

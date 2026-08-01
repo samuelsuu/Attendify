@@ -10,11 +10,12 @@ import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
 import { useAttendanceHistory } from "@/hooks/use-attendance";
 import { useAuth } from "@/hooks/use-auth";
 import { formatDate, formatTime } from "@/lib/date";
+import { getErrorMessage } from "@/lib/error-message";
 import type { AttendanceRecord } from "@/types/database";
 
 export default function HistoryScreen() {
   const { profile } = useAuth();
-  const { data, isLoading, isRefetching, refetch } = useAttendanceHistory(profile?.id);
+  const { data, error, isLoading, isRefetching, refetch } = useAttendanceHistory(profile?.id);
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
@@ -33,11 +34,19 @@ export default function HistoryScreen() {
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={COLORS.primary} />
           }
           ListEmptyComponent={
-            <EmptyState
-              icon="calendar-outline"
-              title="No attendance yet"
-              message="Your recorded attendance will show up here."
-            />
+            error ? (
+              <EmptyState
+                icon="alert-circle-outline"
+                title="Couldn't load your history"
+                message={getErrorMessage(error)}
+              />
+            ) : (
+              <EmptyState
+                icon="calendar-outline"
+                title="No attendance yet"
+                message="Your recorded attendance will show up here."
+              />
+            )
           }
           renderItem={({ item }) => (
             <Card style={styles.row}>

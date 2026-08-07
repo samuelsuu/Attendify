@@ -14,9 +14,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     padding: SPACING.lg,
     shadowColor: COLORS.shadow,
+    // ios
     shadowOpacity: 0.5,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 1 },
+    // android 
     elevation: 2,
   },
 });

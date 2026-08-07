@@ -1,11 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
+
   ScrollView,
   StyleSheet,
   Text,
@@ -47,15 +46,15 @@ export default function LoginScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={styles.centerColumn}>
-            <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
+            <View style={styles.header}>
               <View style={styles.logo}>
                 <Ionicons name="school" size={34} color={COLORS.white} />
               </View>
               <Text style={styles.appName}>Webcapz</Text>
               <Text style={styles.tagline}>Sign in to your account</Text>
-            </Animated.View>
+            </View>
 
-            <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.card}>
+            <Animated.View entering={FadeInDown.delay(200).duration(600)} style={styles.card}>
               <View style={styles.field}>
                 <Text style={styles.fieldLabel}>Email address</Text>
                 <View style={styles.inputRow}>
@@ -86,13 +85,13 @@ export default function LoginScreen() {
                     placeholderTextColor={COLORS.textMuted}
                     style={styles.input}
                   />
-                  <Pressable onPress={() => setShowPassword((prev) => !prev)} hitSlop={8}>
+                  <TouchableOpacity onPress={() => setShowPassword((prev) => !prev)} hitSlop={8}>
                     <Ionicons
                       name={showPassword ? "eye-off-outline" : "eye-outline"}
                       size={20}
                       color={COLORS.textSecondary}
                     />
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
               </View>
 
@@ -112,19 +111,10 @@ export default function LoginScreen() {
                 style={styles.signInButton}
               />
 
-              {/* <TouchableOpacity
-                onPress={handleSignIn}
-                loading={loading}
-                disabled={!email || !password}
-                style={styles.signInButton}
-              >
-                <MaterialIcons name="door-sliding" size={24} color="black" />
-              </TouchableOpacity> */}
-
-              <Pressable onPress={() => router.push("/onboarding")} style={styles.tourLink}>
-                <Ionicons name="sparkles-outline" size={16} color={COLORS.primary} />
+              <TouchableOpacity onPress={() => router.push("/onboarding")} style={styles.tourLink}>
+                {/* <Ionicons name="sparkles-outline" size={16} color={COLORS.primary} /> */}
                 <Text style={styles.tourLinkText}>View App Tour &amp; Onboarding</Text>
-              </Pressable>
+              </TouchableOpacity>
             </Animated.View>
           </View>
         </ScrollView>
@@ -189,7 +179,7 @@ const styles = StyleSheet.create({
   signInButton: { marginTop: SPACING.xs },
   tourLink: {
     marginTop: SPACING.xs,
-    flexDirection: "row",
+    // flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 6,

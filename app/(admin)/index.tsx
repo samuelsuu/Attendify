@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Card } from "@/components/ui/card";
@@ -39,10 +39,10 @@ function QuickLink({
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} style={styles.quickLink}>
+    <TouchableOpacity onPress={onPress} style={styles.quickLink}>
       <Ionicons name={icon} size={22} color={COLORS.white} />
       <Text style={styles.quickLinkLabel}>{label}</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -82,9 +82,9 @@ export default function AdminDashboardScreen() {
             <Text style={styles.welcomeLabel}>Welcome,</Text>
             <Text style={styles.welcomeName}>{profile?.full_name}</Text>
           </View>
-          <Pressable onPress={confirmSignOut} hitSlop={12} style={styles.signOutButton}>
+          <TouchableOpacity onPress={confirmSignOut} hitSlop={12} style={styles.signOutButton}>
             <Ionicons name="log-out-outline" size={20} color={COLORS.danger} />
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.statsRow}>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   statsRow: { flexDirection: "row", gap: SPACING.md },
-  statCard: { flex: 1, gap: SPACING.sm },
+  statCard: { flex: 1, gap: SPACING.sm},
   statIcon: {
     height: 36,
     width: 36,
@@ -154,8 +154,9 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
     borderRadius: RADIUS.xl,
     backgroundColor: COLORS.primary,
-    paddingHorizontal: SPACING.md,
+    // paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.lg,
+    justifyContent: "center",
   },
   quickLinkLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.white },
 });

@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -9,6 +10,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -32,7 +34,7 @@ export default function LoginScreen() {
     setError(null);
     setLoading(true);
     try {
-      await signIn(email.trim(), password);
+      await signIn(email.trim(), password.trim());
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -109,6 +111,15 @@ export default function LoginScreen() {
                 disabled={!email || !password}
                 style={styles.signInButton}
               />
+
+              {/* <TouchableOpacity
+                onPress={handleSignIn}
+                loading={loading}
+                disabled={!email || !password}
+                style={styles.signInButton}
+              >
+                <MaterialIcons name="door-sliding" size={24} color="black" />
+              </TouchableOpacity> */}
 
               <Pressable onPress={() => router.push("/onboarding")} style={styles.tourLink}>
                 <Ionicons name="sparkles-outline" size={16} color={COLORS.primary} />

@@ -39,7 +39,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
     }
 
-    // Applies session + profile together in one update so consumers (e.g. the
+    // Applies session + profile together in one update so user (e.g. the
     // Stack.Protected guards) never see a session set with a stale/missing
     // profile — that mismatch briefly matches no guard and renders nothing.
     async function applySession(nextSession: Session | null) {

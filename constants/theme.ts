@@ -36,7 +36,7 @@ export const COLORS = {
 //   mutedLight: "#F1F3F5",
 //   background: "#FFFFFF",
 //   surface: "#FFFFFF",
-//   border: "#E1E5EA",
+//   border: "#E1E5EA",b
 //   textPrimary: "#0B3D63",
 //   textSecondary: "#5B6B78",
 //   textMuted: "#94A0AA",

@@ -2,9 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  KeyboardAvoidingView,
   Platform,
-
   ScrollView,
   StyleSheet,
   Text,
@@ -12,6 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+import  {KeyboardAvoidingView} from "react-native-keyboard-controller";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -43,7 +43,7 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
+      <KeyboardAvoidingView behavior="padding" style={styles.flex}>
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={styles.centerColumn}>
             <View style={styles.header}>
@@ -112,7 +112,6 @@ export default function LoginScreen() {
               />
 
               <TouchableOpacity onPress={() => router.push("/onboarding")} style={styles.tourLink}>
-                {/* <Ionicons name="sparkles-outline" size={16} color={COLORS.primary} /> */}
                 <Text style={styles.tourLinkText}>View App Tour &amp; Onboarding</Text>
               </TouchableOpacity>
             </Animated.View>

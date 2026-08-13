@@ -29,7 +29,7 @@ export default function UserDetailScreen() {
         <Pressable onPress={() => router.back()} hitSlop={12}>
           <Ionicons name="arrow-back" size={24} color={COLORS.primary} />
         </Pressable>
-        <Text style={styles.title}>Profile</Text>
+        <Text style={styles.title}>Account Details</Text>
       </View>
 
       {isLoading ? (
@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
+    // justifyContent: "space-between",
     gap: SPACING.md,
     paddingHorizontal: SPACING.xl,
     paddingTop: SPACING.lg,

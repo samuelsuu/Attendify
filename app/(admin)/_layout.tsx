@@ -44,7 +44,7 @@ export default function AdminTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="students"
+        name="Students"
         options={{
           title: "Students",
           tabBarIcon: ({ color, size }) => (
@@ -53,7 +53,7 @@ export default function AdminTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="lecturers"
+        name="Lecturers"
         options={{
           title: "Lecturers",
           tabBarIcon: ({ color, size }) => (

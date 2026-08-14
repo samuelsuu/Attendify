@@ -7,20 +7,20 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { UserListItem } from "@/components/user-list-item";
 import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
-import { useStudents } from "@/hooks/use-profile";
+import { useLecturers } from "@/hooks/use-profile";
 import { getErrorMessage } from "@/lib/error-message";
 import type { Profile } from "@/types/database";
 
-export default function StudentsScreen() {
+export default function LecturersScreen() {
   const router = useRouter();
-  const { data, error, isLoading, isRefetching, refetch } = useStudents();
+  const { data, error, isLoading, isRefetching, refetch } = useLecturers();
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Students</Text>
+        <Text style={styles.title}>Lecturers</Text>
         <Pressable
-          onPress={() => router.push({ pathname: "/(admin)/create-user", params: { role: "student" } })}
+          onPress={() => router.push({ pathname: "/(admin)/create-user", params: { role: "lecturer" } })}
           hitSlop={12}
         >
           <Ionicons name="add-circle" size={30} color={COLORS.primary} />
@@ -41,14 +41,14 @@ export default function StudentsScreen() {
             error ? (
               <EmptyState
                 icon="alert-circle-outline"
-                title="Couldn't load students"
+                title="Couldn't load lecturers"
                 message={getErrorMessage(error)}
               />
             ) : (
               <EmptyState
-                icon="school-outline"
-                title="No students yet"
-                message="Students you create in Supabase will appear here."
+                icon="briefcase-outline"
+                title="No lecturers yet"
+                message="Lecturers you create in Supabase will appear here."
               />
             )
           }
@@ -56,7 +56,7 @@ export default function StudentsScreen() {
             <UserListItem
               profile={item}
               onPress={() =>
-                router.push({ pathname: "/(admin)/user/[id]", params: { id: item.id } })
+                router.push({ pathname: "/(admin)/Lecturers/id", params: { id: item.id } })
               }
             />
           )}

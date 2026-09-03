@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 
-import { FONT_SIZE, RADIUS, ROLE_COLORS, SPACING } from "@/constants/theme";
+import { FONT_SIZE, RADIUS, SPACING, useTheme, getRoleColors } from "@/constants/theme";
 import type { Role } from "@/types/database";
 
 export function RoleBadge({ role }: { role: Role }) {
-  const { bg, text } = ROLE_COLORS[role];
+  const colors = useTheme();
+  const roleColors = getRoleColors(colors);
+  const { bg, text } = roleColors[role];
 
   return (
     <View style={[styles.badge, { backgroundColor: bg }]}>

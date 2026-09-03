@@ -1,12 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
-import { COLORS } from "@/constants/theme";
+import { useTheme } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function MemberTabsLayout() {
   const { profile } = useAuth();
   const isLecturer = profile?.role === "lecturer";
+  const COLORS = useTheme();
 
   return (
     <Tabs

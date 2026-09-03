@@ -4,7 +4,7 @@ import { Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, 
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Card } from "@/components/ui/card";
-import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
+import { FONT_SIZE, RADIUS, SPACING, useTheme } from "@/constants/theme";
 import { useTodayCount } from "@/hooks/use-attendance";
 import { useAuth } from "@/hooks/use-auth";
 import { useLecturers, useStudents } from "@/hooks/use-profile";
@@ -18,6 +18,9 @@ function StatCard({
   label: string;
   value: number | undefined;
 }) {
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);   
+
   return (
     <Card style={styles.statCard}>
       <View style={styles.statIcon}>
@@ -38,6 +41,9 @@ function QuickLink({
   label: string;
   onPress: () => void;
 }) {
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);   
+
   return (
     <TouchableOpacity onPress={onPress} style={styles.quickLink}>
       <Ionicons name={icon} size={22} color={COLORS.white} />
@@ -52,6 +58,8 @@ export default function AdminDashboardScreen() {
   const todayCount = useTodayCount();
   const students = useStudents();
   const lecturers = useLecturers();
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   const isRefetching =
     todayCount.isRefetching || students.isRefetching || lecturers.isRefetching;
@@ -118,45 +126,46 @@ export default function AdminDashboardScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
-  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
-  headerRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
-  headerText: { gap: 4 },
-  welcomeLabel: { fontSize: FONT_SIZE.md, color: COLORS.textSecondary },
-  welcomeName: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  signOutButton: {
-    height: 40,
-    width: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    backgroundColor: COLORS.white,
-  },
-  statsRow: { flexDirection: "row", gap: SPACING.md },
-  statCard: { flex: 1, gap: SPACING.sm},
-  statIcon: {
-    height: 36,
-    width: 36,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 18,
-    backgroundColor: COLORS.primaryLight,
-  },
-  statValue: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  statLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
-  section: { gap: SPACING.md },
-  sectionTitle: { fontSize: FONT_SIZE.lg, fontWeight: "600", color: COLORS.textPrimary },
-  quickLinksRow: { flexDirection: "row", gap: SPACING.md },
-  quickLink: {
-    flex: 1,
-    alignItems: "center",
-    gap: SPACING.sm,
-    borderRadius: RADIUS.xl,
-    backgroundColor: COLORS.primary,
-    // paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.lg,
-    justifyContent: "center",
-  },
-  quickLinkLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.white },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+    scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+    headerRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
+    headerText: { gap: 4 },
+    welcomeLabel: { fontSize: FONT_SIZE.md, color: COLORS.textSecondary },
+    welcomeName: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    signOutButton: {
+      height: 40,
+      width: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 20,
+      backgroundColor: COLORS.white,
+    },
+    statsRow: { flexDirection: "row", gap: SPACING.md },
+    statCard: { flex: 1, gap: SPACING.sm },
+    statIcon: {
+      height: 36,
+      width: 36,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 18,
+      backgroundColor: COLORS.primaryLight,
+    },
+    statValue: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    statLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+    section: { gap: SPACING.md },
+    sectionTitle: { fontSize: FONT_SIZE.lg, fontWeight: "600", color: COLORS.textPrimary },
+    quickLinksRow: { flexDirection: "row", gap: SPACING.md },
+    quickLink: {
+      flex: 1,
+      alignItems: "center",
+      gap: SPACING.sm,
+      borderRadius: RADIUS.xl,
+      backgroundColor: COLORS.primary,
+      paddingVertical: SPACING.lg,
+      justifyContent: "center",
+    },
+    quickLinkLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.white },
+  });
+}

@@ -8,11 +8,13 @@ import { Avatar } from "@/components/ui/avatar";
 import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
+import { FONT_SIZE, RADIUS, SPACING, useTheme } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function MemberHomeScreen() {
   const { profile } = useAuth();
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   if (!profile) {
     return <LoadingSpinner />;
@@ -24,8 +26,7 @@ export default function MemberHomeScreen() {
         <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
           <Avatar uri={profile.avatar_url} name={profile.full_name} size={52} />
           <View style={styles.headerText}>
-            <View style={styles.welcomeRow}>
-              <Ionicons name="sparkles-outline" size={16} color={COLORS.primary} />
+            <View>
               <Text style={styles.welcomeLabel}>Welcome back,</Text>
             </View>
             <View style={styles.nameRow}>
@@ -55,32 +56,33 @@ export default function MemberHomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.background },
-  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
-  header: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
-  headerText: { flex: 1, gap: SPACING.sm },
-  welcomeRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  welcomeLabel: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textSecondary },
-  nameRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  name: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  infoCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    backgroundColor: COLORS.primaryLight,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  infoIcon: {
-    height: 40,
-    width: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.primary,
-  },
-  infoText: { flex: 1 },
-  infoTitle: { fontSize: FONT_SIZE.md, fontWeight: "700", color: COLORS.primaryDark },
-  infoBody: { fontSize: FONT_SIZE.xs, color: COLORS.primaryDark },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.background },
+    scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+    header: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+    headerText: { flex: 1, gap: SPACING.sm },
+    welcomeLabel: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textSecondary },
+    nameRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+    name: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    infoCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 14,
+      backgroundColor: COLORS.primaryLight,
+      borderWidth: 1,
+      borderColor: COLORS.border,
+    },
+    infoIcon: {
+      height: 40,
+      width: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: RADIUS.md,
+      backgroundColor: COLORS.primary,
+    },
+    infoText: { flex: 1 },
+    infoTitle: { fontSize: FONT_SIZE.md, fontWeight: "700", color: COLORS.primaryDark },
+    infoBody: { fontSize: FONT_SIZE.xs, color: COLORS.primaryDark },
+  });
+}

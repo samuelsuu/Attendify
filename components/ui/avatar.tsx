@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { Text, View } from "react-native";
 
-import { COLORS } from "@/constants/theme";
+import { useTheme } from "@/constants/theme";
 
 type AvatarProps = {
   uri?: string | null;
@@ -10,6 +10,7 @@ type AvatarProps = {
 };
 
 export function Avatar({ uri, name, size = 40 }: AvatarProps) {
+  const COLORS = useTheme();
   const dimension = { width: size, height: size, borderRadius: size / 2 };
 
   if (uri) {

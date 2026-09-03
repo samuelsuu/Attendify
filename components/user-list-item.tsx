@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
-import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
+import { FONT_SIZE, SPACING, useTheme } from "@/constants/theme";
 import type { Profile } from "@/types/database";
 
 export function UserListItem({
@@ -13,6 +13,8 @@ export function UserListItem({
   profile: Profile;
   onPress?: () => void;
 }) {
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
   const roleIcon =
     profile.role === "student"
       ? "school-outline"
@@ -40,11 +42,13 @@ export function UserListItem({
   );
 }
 
-const styles = StyleSheet.create({
-  card: { marginBottom: SPACING.md, flexDirection: "row", alignItems: "center", gap: SPACING.md },
-  info: { flex: 1, gap: 4 },
-  nameRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  name: { fontWeight: "700", color: COLORS.textPrimary, fontSize: FONT_SIZE.md },
-  emailRow: { flexDirection: "row", alignItems: "center", gap: 4 },
-  email: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    card: { marginBottom: SPACING.md, flexDirection: "row", alignItems: "center", gap: SPACING.md },
+    info: { flex: 1, gap: 4 },
+    nameRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+    name: { fontWeight: "700", color: COLORS.textPrimary, fontSize: FONT_SIZE.md },
+    emailRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+    email: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+  });
+}

@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { UserListItem } from "@/components/user-list-item";
-import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
+import { FONT_SIZE, SPACING, useTheme } from "@/constants/theme";
 import { useStudents } from "@/hooks/use-profile";
 import { getErrorMessage } from "@/lib/error-message";
 import type { Profile } from "@/types/database";
@@ -14,6 +14,8 @@ import type { Profile } from "@/types/database";
 export default function StudentsScreen() {
   const router = useRouter();
   const { data, error, isLoading, isRefetching, refetch } = useStudents();
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
@@ -66,16 +68,18 @@ export default function StudentsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: SPACING.xl,
-    paddingTop: SPACING.lg,
-    paddingBottom: SPACING.sm,
-  },
-  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  listContent: { padding: SPACING.xl, paddingTop: SPACING.sm, flexGrow: 1 },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: SPACING.xl,
+      paddingTop: SPACING.lg,
+      paddingBottom: SPACING.sm,
+    },
+    title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    listContent: { padding: SPACING.xl, paddingTop: SPACING.sm, flexGrow: 1 },
+  });
+}

@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
-import { COLORS } from "@/constants/theme";
+import { useTheme } from "@/constants/theme";
 
 export default function AdminTabsLayout() {
+  const COLORS = useTheme();
+
   return (
     <Tabs
       screenOptions={{
@@ -62,7 +64,6 @@ export default function AdminTabsLayout() {
         }}
       />
       <Tabs.Screen name="create-user" options={{ href: null }} />
-      <Tabs.Screen name="user/[id]" options={{ href: null }} />
     </Tabs>
   );
 }

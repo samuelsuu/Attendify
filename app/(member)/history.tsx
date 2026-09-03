@@ -6,7 +6,7 @@ import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { COLORS, FONT_SIZE, SPACING } from "@/constants/theme";
+import { FONT_SIZE, SPACING, useTheme } from "@/constants/theme";
 import { useAttendanceHistory } from "@/hooks/use-attendance";
 import { useAuth } from "@/hooks/use-auth";
 import { formatDate, formatTime } from "@/lib/date";
@@ -16,6 +16,8 @@ import type { AttendanceRecord } from "@/types/database";
 export default function HistoryScreen() {
   const { profile } = useAuth();
   const { data, error, isLoading, isRefetching, refetch } = useAttendanceHistory(profile?.id);
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
@@ -71,28 +73,30 @@ export default function HistoryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
-  header: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg, paddingBottom: SPACING.sm },
-  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  listContent: { padding: SPACING.xl, paddingTop: SPACING.sm, flexGrow: 1 },
-  row: { marginBottom: SPACING.md, flexDirection: "row", alignItems: "center", gap: SPACING.md },
-  icon: {
-    height: 40,
-    width: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    backgroundColor: COLORS.primaryLight,
-  },
-  info: { flex: 1, gap: 4 },
-  date: { fontWeight: "600", color: COLORS.textPrimary, fontSize: FONT_SIZE.md },
-  time: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
-  markedBy: { alignItems: "flex-end", gap: 4 },
-  markedByLabel: {
-    fontSize: 10,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    color: COLORS.textMuted,
-  },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+    header: { paddingHorizontal: SPACING.xl, paddingTop: SPACING.lg, paddingBottom: SPACING.sm },
+    title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    listContent: { padding: SPACING.xl, paddingTop: SPACING.sm, flexGrow: 1 },
+    row: { marginBottom: SPACING.md, flexDirection: "row", alignItems: "center", gap: SPACING.md },
+    icon: {
+      height: 40,
+      width: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 20,
+      backgroundColor: COLORS.primaryLight,
+    },
+    info: { flex: 1, gap: 4 },
+    date: { fontWeight: "600", color: COLORS.textPrimary, fontSize: FONT_SIZE.md },
+    time: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+    markedBy: { alignItems: "flex-end", gap: 4 },
+    markedByLabel: {
+      fontSize: 10,
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+      color: COLORS.textMuted,
+    },
+  });
+}

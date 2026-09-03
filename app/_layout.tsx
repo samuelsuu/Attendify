@@ -48,7 +48,7 @@ export default function RootLayout() {
           <QueryClientProvider client={queryClient}>
             <AuthProvider>
               <RootNavigator />
-              <StatusBar style="dark" />
+              <StatusBar style="auto" />
             </AuthProvider>
           </QueryClientProvider>
         </SafeAreaProvider>

@@ -15,7 +15,7 @@ import {
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
+import { FONT_SIZE, RADIUS, SPACING, useTheme } from "@/constants/theme";
 import { useOnboarding } from "@/hooks/use-onboarding";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -60,9 +60,11 @@ export default function OnboardingScreen() {
   const { completeOnboarding } = useOnboarding();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<Slide>>(null);
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   function triggerHaptic() {
-    Haptics.selectionAsync().catch(() => {});
+    Haptics.selectionAsync().catch(() => { });
   }
 
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -152,60 +154,62 @@ export default function OnboardingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.background },
-  flex: { flex: 1 },
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: SPACING.xl,
-    paddingTop: SPACING.sm,
-    paddingBottom: SPACING.sm,
-  },
-  brand: { fontSize: FONT_SIZE.sm, fontWeight: "700", letterSpacing: 1.5, color: COLORS.primaryDark },
-  skipButton: {
-    borderRadius: RADIUS.full,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: 6,
-    backgroundColor: COLORS.mutedLight,
-  },
-  skipText: { fontSize: FONT_SIZE.xs, fontWeight: "600", color: COLORS.textSecondary },
-  slide: { flex: 1, alignItems: "center", paddingHorizontal: SPACING.xxl, paddingTop: SPACING.lg },
-  image: {
-    width: "100%",
-    height: 280,
-    borderRadius: RADIUS.xxl,
-    backgroundColor: COLORS.mutedLight,
-  },
-  textBlock: { marginTop: SPACING.xxl, gap: SPACING.sm, alignItems: "center" },
-  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "800", color: COLORS.textPrimary, textAlign: "center" },
-  description: {
-    fontSize: FONT_SIZE.lg,
-    color: COLORS.textSecondary,
-    textAlign: "center",
-    lineHeight: 22,
-  },
-  bottomControls: { gap: SPACING.xl, paddingHorizontal: SPACING.xxl, paddingBottom: SPACING.xxl, paddingTop: SPACING.sm },
-  dots: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: SPACING.sm },
-  dot: { height: 8, width: 8, borderRadius: 4, backgroundColor: COLORS.muted },
-  dotActive: { width: 24, backgroundColor: COLORS.primary },
-  actionsRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
-  backButton: {
-    borderRadius: RADIUS.xl,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.md,
-  },
-  backButtonText: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textSecondary },
-  nextButton: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: RADIUS.xl,
-    backgroundColor: COLORS.primary,
-    paddingVertical: SPACING.md,
-  },
-  nextButtonText: { fontSize: FONT_SIZE.lg, fontWeight: "700", color: COLORS.white },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.background },
+    flex: { flex: 1 },
+    topBar: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: SPACING.xl,
+      paddingTop: SPACING.sm,
+      paddingBottom: SPACING.sm,
+    },
+    brand: { fontSize: FONT_SIZE.sm, fontWeight: "700", letterSpacing: 1.5, color: COLORS.primaryDark },
+    skipButton: {
+      borderRadius: RADIUS.full,
+      paddingHorizontal: SPACING.md,
+      paddingVertical: 6,
+      backgroundColor: COLORS.mutedLight,
+    },
+    skipText: { fontSize: FONT_SIZE.xs, fontWeight: "600", color: COLORS.textSecondary },
+    slide: { flex: 1, alignItems: "center", paddingHorizontal: SPACING.xxl, paddingTop: SPACING.lg },
+    image: {
+      width: "100%",
+      height: 280,
+      borderRadius: RADIUS.xxl,
+      backgroundColor: COLORS.mutedLight,
+    },
+    textBlock: { marginTop: SPACING.xxl, gap: SPACING.sm, alignItems: "center" },
+    title: { fontSize: FONT_SIZE.xxxl, fontWeight: "800", color: COLORS.textPrimary, textAlign: "center" },
+    description: {
+      fontSize: FONT_SIZE.lg,
+      color: COLORS.textSecondary,
+      textAlign: "center",
+      lineHeight: 22,
+    },
+    bottomControls: { gap: SPACING.xl, paddingHorizontal: SPACING.xxl, paddingBottom: SPACING.xxl, paddingTop: SPACING.sm },
+    dots: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: SPACING.sm },
+    dot: { height: 8, width: 8, borderRadius: 4, backgroundColor: COLORS.muted },
+    dotActive: { width: 24, backgroundColor: COLORS.primary },
+    actionsRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+    backButton: {
+      borderRadius: RADIUS.xl,
+      borderWidth: 1,
+      borderColor: COLORS.border,
+      paddingHorizontal: SPACING.xl,
+      paddingVertical: SPACING.md,
+    },
+    backButtonText: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textSecondary },
+    nextButton: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: RADIUS.xl,
+      backgroundColor: COLORS.primary,
+      paddingVertical: SPACING.md,
+    },
+    nextButtonText: { fontSize: FONT_SIZE.lg, fontWeight: "700", color: COLORS.white },
+  });
+}

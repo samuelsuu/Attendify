@@ -14,7 +14,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
+import { FONT_SIZE, RADIUS, SPACING, useTheme } from "@/constants/theme";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -33,13 +33,6 @@ type ButtonProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-const VARIANT_ICON_COLORS: Record<ButtonVariant, string> = {
-  primary: COLORS.white,
-  secondary: COLORS.primaryDark,
-  danger: COLORS.white,
-  outline: COLORS.primary,
-};
-
 export function Button({
   label,
   onPress,
@@ -52,8 +45,18 @@ export function Button({
   iconColor,
   style,
 }: ButtonProps) {
+  const COLORS = useTheme();
+  const styles = getButtonStyles(COLORS);
+  const labelStyles = getLabelStyles(COLORS);
   const scale = useSharedValue(1);
   const isDisabled = disabled || loading;
+
+  const VARIANT_ICON_COLORS: Record<ButtonVariant, string> = {
+    primary: COLORS.white,
+    secondary: COLORS.primaryDark,
+    danger: COLORS.white,
+    outline: COLORS.primary,
+  };
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -92,35 +95,39 @@ export function Button({
   );
 }
 
-const styles = StyleSheet.create({
-  base: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: RADIUS.md,
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: 14,
-  },
-  primary: { backgroundColor: COLORS.primary },
-  secondary: { backgroundColor: COLORS.mutedLight },
-  danger: { backgroundColor: COLORS.danger },
-  outline: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  disabled: { opacity: 0.5 },
-  content: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: SPACING.sm,
-  },
-  label: { fontSize: FONT_SIZE.lg, fontWeight: "600" },
-});
+function getButtonStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    base: {
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: RADIUS.md,
+      paddingHorizontal: SPACING.xl,
+      paddingVertical: 14,
+    },
+    primary: { backgroundColor: COLORS.primary },
+    secondary: { backgroundColor: COLORS.mutedLight },
+    danger: { backgroundColor: COLORS.danger },
+    outline: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: COLORS.border,
+    },
+    disabled: { opacity: 0.5 },
+    content: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: SPACING.sm,
+    },
+    label: { fontSize: FONT_SIZE.lg, fontWeight: "600" },
+  });
+}
 
-const labelStyles = StyleSheet.create({
-  primary: { color: COLORS.white },
-  secondary: { color: COLORS.primaryDark },
-  danger: { color: COLORS.white },
-  outline: { color: COLORS.textSecondary },
-});
+function getLabelStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    primary: { color: COLORS.white },
+    secondary: { color: COLORS.primaryDark },
+    danger: { color: COLORS.white },
+    outline: { color: COLORS.textSecondary },
+  });
+}

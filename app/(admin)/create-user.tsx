@@ -3,7 +3,6 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
@@ -13,11 +12,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { KeyboardAvoidingView } from "react-native-keyboard-controller"
 import { AvatarPicker } from "@/components/avatar-picker";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
+import { FONT_SIZE, RADIUS, SPACING, useTheme } from "@/constants/theme";
 import { useCreateAccount, useUpdateAvatar } from "@/hooks/use-admin";
 import { getErrorMessage } from "@/lib/error-message";
 import { generateTempPassword } from "@/lib/password";
@@ -29,6 +28,8 @@ export default function CreateUserScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ role?: string }>();
   const initialRole: MemberRole = params.role === "lecturer" ? "lecturer" : "student";
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   const [role, setRole] = useState<MemberRole>(initialRole);
   const [fullName, setFullName] = useState("");
@@ -73,7 +74,7 @@ export default function CreateUserScreen() {
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.flex}>
+      <KeyboardAvoidingView behavior="padding" style={styles.flex}>
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
           <View style={styles.header}>
             <Pressable onPress={() => router.back()} hitSlop={12}>
@@ -188,55 +189,57 @@ export default function CreateUserScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
-  flex: { flex: 1 },
-  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
-  header: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
-  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  card: { gap: SPACING.lg },
-  field: { gap: 6 },
-  fieldLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textPrimary },
-  roleRow: { flexDirection: "row", gap: SPACING.sm },
-  roleOption: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: SPACING.sm,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.md,
-  },
-  roleOptionSelected: { borderColor: COLORS.primary, backgroundColor: COLORS.primaryLight },
-  roleLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textSecondary, textTransform: "capitalize" },
-  roleLabelSelected: { color: COLORS.primary },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: SPACING.sm,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    paddingHorizontal: SPACING.md,
-    backgroundColor: COLORS.mutedLight,
-  },
-  input: { flex: 1, paddingVertical: SPACING.md, fontSize: FONT_SIZE.lg, color: COLORS.textPrimary },
-  passwordHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  regenerate: { flexDirection: "row", alignItems: "center", gap: 4 },
-  regenerateLabel: { fontSize: FONT_SIZE.xs, fontWeight: "600", color: COLORS.primary },
-  hint: { fontSize: FONT_SIZE.xs, color: COLORS.textMuted },
-  errorBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: SPACING.sm,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-    backgroundColor: COLORS.dangerLight,
-    borderWidth: 1,
-    borderColor: COLORS.dangerBorder,
-  },
-  errorText: { flex: 1, fontSize: FONT_SIZE.xs, fontWeight: "500", color: COLORS.danger },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+    flex: { flex: 1 },
+    scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+    header: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+    title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    card: { gap: SPACING.lg },
+    field: { gap: 6 },
+    fieldLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textPrimary },
+    roleRow: { flexDirection: "row", gap: SPACING.sm },
+    roleOption: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: SPACING.sm,
+      borderRadius: RADIUS.md,
+      borderWidth: 1,
+      borderColor: COLORS.border,
+      paddingVertical: SPACING.md,
+      paddingHorizontal: SPACING.md,
+    },
+    roleOptionSelected: { borderColor: COLORS.primary, backgroundColor: COLORS.primaryLight },
+    roleLabel: { fontSize: FONT_SIZE.md, fontWeight: "600", color: COLORS.textSecondary, textTransform: "capitalize" },
+    roleLabelSelected: { color: COLORS.primary },
+    inputRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: SPACING.sm,
+      borderRadius: RADIUS.md,
+      borderWidth: 1,
+      borderColor: COLORS.border,
+      paddingHorizontal: SPACING.md,
+      backgroundColor: COLORS.mutedLight,
+    },
+    input: { flex: 1, paddingVertical: SPACING.md, fontSize: FONT_SIZE.lg, color: COLORS.textPrimary },
+    passwordHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+    regenerate: { flexDirection: "row", alignItems: "center", gap: 4 },
+    regenerateLabel: { fontSize: FONT_SIZE.xs, fontWeight: "600", color: COLORS.primary },
+    hint: { fontSize: FONT_SIZE.xs, color: COLORS.textMuted },
+    errorBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: SPACING.sm,
+      borderRadius: RADIUS.md,
+      padding: SPACING.md,
+      backgroundColor: COLORS.dangerLight,
+      borderWidth: 1,
+      borderColor: COLORS.dangerBorder,
+    },
+    errorText: { flex: 1, fontSize: FONT_SIZE.xs, fontWeight: "500", color: COLORS.danger },
+  });
+}

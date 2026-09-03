@@ -7,11 +7,13 @@ import { RoleBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
+import { useTheme, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function ProfileScreen() {
   const { profile, signOut } = useAuth();
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   if (!profile) {
     return <LoadingSpinner />;
@@ -68,32 +70,34 @@ export default function ProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
-  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
-  header: { flexDirection: "row", alignItems: "center", gap: SPACING.sm },
-  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  avatarCard: { alignItems: "center", gap: SPACING.md, paddingVertical: SPACING.xxl },
-  name: { fontSize: FONT_SIZE.xl, fontWeight: "700", color: COLORS.textPrimary },
-  infoCard: { gap: SPACING.lg },
-  sectionLabel: {
-    fontSize: FONT_SIZE.xs,
-    fontWeight: "700",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    color: COLORS.textMuted,
-  },
-  infoRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
-  infoIcon: {
-    height: 36,
-    width: 36,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.primaryLight,
-  },
-  infoText: { flex: 1 },
-  infoLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
-  infoValue: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textPrimary },
-  capitalize: { textTransform: "capitalize" },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+    scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+    header: { flexDirection: "row", alignItems: "center", gap: SPACING.sm },
+    title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    avatarCard: { alignItems: "center", gap: SPACING.md, paddingVertical: SPACING.xxl },
+    name: { fontSize: FONT_SIZE.xl, fontWeight: "700", color: COLORS.textPrimary },
+    infoCard: { gap: SPACING.lg },
+    sectionLabel: {
+      fontSize: FONT_SIZE.xs,
+      fontWeight: "700",
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+      color: COLORS.textMuted,
+    },
+    infoRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+    infoIcon: {
+      height: 36,
+      width: 36,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: RADIUS.md,
+      backgroundColor: COLORS.primaryLight,
+    },
+    infoText: { flex: 1 },
+    infoLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+    infoValue: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textPrimary },
+    capitalize: { textTransform: "capitalize" },
+  });
+}

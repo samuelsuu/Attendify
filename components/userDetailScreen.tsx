@@ -8,7 +8,7 @@ import { RoleBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { COLORS, FONT_SIZE, RADIUS, SPACING } from "@/constants/theme";
+import { FONT_SIZE, RADIUS, SPACING, useTheme } from "@/constants/theme";
 import { useUpdateAvatar } from "@/hooks/use-admin";
 import { useProfileById } from "@/hooks/use-profile";
 
@@ -17,6 +17,8 @@ export default function UserDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: profile, isLoading } = useProfileById(id);
   const updateAvatar = useUpdateAvatar();
+  const COLORS = useTheme();
+  const styles = getStyles(COLORS);
 
   function handlePickAvatar(localUri: string) {
     if (!profile) return;
@@ -78,40 +80,41 @@ export default function UserDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.mutedLight },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    // justifyContent: "space-between",
-    gap: SPACING.md,
-    paddingHorizontal: SPACING.xl,
-    paddingTop: SPACING.lg,
-    paddingBottom: SPACING.sm,
-  },
-  title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
-  scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
-  avatarCard: { alignItems: "center", gap: SPACING.md, paddingVertical: SPACING.xxl },
-  changePhotoHint: { fontSize: FONT_SIZE.xs, fontWeight: "500", color: COLORS.primary },
-  name: { fontSize: FONT_SIZE.xl, fontWeight: "700", color: COLORS.textPrimary },
-  infoCard: { gap: SPACING.lg },
-  sectionLabel: {
-    fontSize: FONT_SIZE.xs,
-    fontWeight: "700",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    color: COLORS.textMuted,
-  },
-  infoRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
-  infoIcon: {
-    height: 36,
-    width: 36,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: RADIUS.md,
-    backgroundColor: COLORS.primaryLight,
-  },
-  infoText: { flex: 1 },
-  infoLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
-  infoValue: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textPrimary },
-});
+function getStyles(COLORS: ReturnType<typeof useTheme>) {
+  return StyleSheet.create({
+    screen: { flex: 1, backgroundColor: COLORS.mutedLight },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: SPACING.md,
+      paddingHorizontal: SPACING.xl,
+      paddingTop: SPACING.lg,
+      paddingBottom: SPACING.sm,
+    },
+    title: { fontSize: FONT_SIZE.xxxl, fontWeight: "700", color: COLORS.textPrimary },
+    scrollContent: { padding: SPACING.xl, gap: SPACING.xl },
+    avatarCard: { alignItems: "center", gap: SPACING.md, paddingVertical: SPACING.xxl },
+    changePhotoHint: { fontSize: FONT_SIZE.xs, fontWeight: "500", color: COLORS.primary },
+    name: { fontSize: FONT_SIZE.xl, fontWeight: "700", color: COLORS.textPrimary },
+    infoCard: { gap: SPACING.lg },
+    sectionLabel: {
+      fontSize: FONT_SIZE.xs,
+      fontWeight: "700",
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+      color: COLORS.textMuted,
+    },
+    infoRow: { flexDirection: "row", alignItems: "center", gap: SPACING.md },
+    infoIcon: {
+      height: 36,
+      width: 36,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: RADIUS.md,
+      backgroundColor: COLORS.primaryLight,
+    },
+    infoText: { flex: 1 },
+    infoLabel: { fontSize: FONT_SIZE.xs, color: COLORS.textSecondary },
+    infoValue: { fontSize: FONT_SIZE.md, fontWeight: "500", color: COLORS.textPrimary },
+  });
+}
